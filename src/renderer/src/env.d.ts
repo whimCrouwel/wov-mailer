@@ -13,7 +13,7 @@ declare global {
       previewRecipients(baseId: string, tableId: string, emailField: string, filters: FilterCondition[]): Promise<{ count: number; sample: string[] }>
       fetchRecipients(baseId: string, tableId: string, emailField: string, filters: FilterCondition[]): Promise<Recipient[]>
       fetchSample(baseId: string, tableId: string, emailField: string): Promise<Recipient | null>
-      getFieldValues(baseId: string, tableId: string, fieldName: string): Promise<string[]>
+      getFieldValues(baseId: string, tableId: string, fieldName: string, fieldType?: string): Promise<string[]>
       listTemplates(): Promise<string[]>
       getTemplate(name: string): Promise<string>
       sendBroadcast(compose: ComposeState): Promise<{ sent: number; failed: number; errors: string[] }>

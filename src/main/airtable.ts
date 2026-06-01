@@ -39,6 +39,10 @@ export function buildFormula(filters: FilterCondition[]): string {
   if (filters.length === 0) return ''
 
   const parts = filters.map(f => {
+    if (f.fieldType === 'checkbox') {
+      const boolExpr = f.value === 'true' ? 'TRUE()' : 'FALSE()'
+      return `{${f.field}}=${boolExpr}`
+    }
     if (f.operator === 'equals') return `{${f.field}}='${f.value}'`
     if (f.operator === 'contains') return `FIND('${f.value}',{${f.field}})>0`
     if (f.operator === 'gt') return `{${f.field}}>${f.value}`
@@ -93,7 +97,11 @@ export async function fetchFieldValues(
   baseId: string,
   tableId: string,
   fieldName: string,
+  fieldType?: string,
 ): Promise<string[]> {
+  // Boolean fields don't need a record scan — values are always true/false
+  if (fieldType === 'checkbox') return ['true', 'false']
+
   const base = client(token).base(baseId)
   const seen = new Set<string>()
   await base(tableId).select({ fields: [fieldName] }).eachPage((pageRecords, fetchNextPage) => {
@@ -101,6 +109,7 @@ export async function fetchFieldValues(
       const val = r.get(fieldName)
       if (typeof val === 'string' && val.trim()) seen.add(val.trim())
       else if (typeof val === 'number') seen.add(String(val))
+      else if (typeof val === 'boolean') seen.add(String(val))
     }
     fetchNextPage()
   })

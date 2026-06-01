@@ -47,9 +47,9 @@ export function registerIpcHandlers(): void {
     return fetchSampleRecipient(config.airtableToken, baseId, tableId, emailField)
   })
 
-  ipcMain.handle(IPC.AIRTABLE_FIELD_VALUES, async (_event, baseId: string, tableId: string, fieldName: string) => {
+  ipcMain.handle(IPC.AIRTABLE_FIELD_VALUES, async (_event, baseId: string, tableId: string, fieldName: string, fieldType?: string) => {
     const config = await getConfig()
-    return fetchFieldValues(config.airtableToken, baseId, tableId, fieldName)
+    return fetchFieldValues(config.airtableToken, baseId, tableId, fieldName, fieldType)
   })
 
   ipcMain.handle(IPC.TEMPLATES_LIST, async () => listTemplates())

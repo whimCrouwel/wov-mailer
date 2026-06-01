@@ -149,7 +149,7 @@ export function Compose({ initial, onSent }: Props) {
       </Card>
 
       {/* Step 5: Preview */}
-      {compose.templateName && compose.body && (
+      {compose.templateName && (
         <Card className="bg-zinc-900 border-zinc-800">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">

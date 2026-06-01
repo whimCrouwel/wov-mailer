@@ -27,18 +27,18 @@ function operatorsFor(type: string): { value: FilterCondition['operator']; label
 }
 
 function ValueInput({
-  baseId, tableId, fieldName, value, onChange,
-}: { baseId: string; tableId: string; fieldName: string; value: string; onChange: (v: string) => void }) {
+  baseId, tableId, fieldName, fieldType, value, onChange,
+}: { baseId: string; tableId: string; fieldName: string; fieldType: string; value: string; onChange: (v: string) => void }) {
   const [options, setOptions] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!baseId || !tableId || !fieldName) return
     setLoading(true)
-    window.api.getFieldValues(baseId, tableId, fieldName)
+    window.api.getFieldValues(baseId, tableId, fieldName, fieldType)
       .then(vals => { setOptions(vals); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [baseId, tableId, fieldName])
+  }, [baseId, tableId, fieldName, fieldType])
 
   if (loading) {
     return (
@@ -53,13 +53,17 @@ function ValueInput({
   }
 
   if (options.length > 0) {
+    const label = (o: string) => {
+      if (fieldType === 'checkbox') return o === 'true' ? 'Yes (checked)' : 'No (unchecked)'
+      return o
+    }
     return (
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
           <SelectValue placeholder="Select value…" />
         </SelectTrigger>
         <SelectContent>
-          {options.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+          {options.map(o => <SelectItem key={o} value={o}>{label(o)}</SelectItem>)}
         </SelectContent>
       </Select>
     )
@@ -137,6 +141,7 @@ export function FilterBuilder({ baseId, tableId, fields, filters, onChange }: Pr
               baseId={baseId}
               tableId={tableId}
               fieldName={filter.field}
+              fieldType={field?.type ?? 'singleLineText'}
               value={filter.value}
               onChange={v => updateCondition(i, { value: v })}
             />
