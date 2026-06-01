@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; background-color: #f0f0f0; }
+    table { border-collapse: collapse; }
+    .body-text h1 { font-size: 24px; font-weight: 700; color: #111; margin: 0 0 12px; }
+    .body-text h2 { font-size: 18px; font-weight: 600; color: #222; margin: 24px 0 12px; }
+    .body-text h3 { font-size: 15px; font-weight: 600; color: #333; margin: 18px 0 8px; }
+    .body-text p  { margin: 0 0 16px; }
+    .body-text ul, .body-text ol { margin: 0 0 16px; padding-left: 24px; }
+    .body-text li { margin-bottom: 6px; }
+    .body-text a  { color: #7c3aed; text-decoration: underline; }
+    .body-text strong { font-weight: 700; color: #111; }
+    .body-text blockquote { margin: 0 0 16px; padding: 12px 16px; border-left: 3px solid #7c3aed; color: #555; background: #faf5ff; }
+    .body-text code { background: #f3f0ff; color: #6d28d9; padding: 2px 5px; border-radius: 3px; font-family: monospace; font-size: 13px; }
+    @media only screen and (max-width: 620px) {
+      .outer { width: 100% !important; }
+      .hero-cell { padding: 32px 20px !important; }
+      .body-cell { padding: 24px 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f0f0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f0f0;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <table class="outer" width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:10px;overflow:hidden;">
+
+          <!-- Hero header with gradient -->
+          <tr>
+            <td class="hero-cell" align="center" style="padding:40px 40px 36px;background:#6d28d9;background:linear-gradient(135deg,#6d28d9 0%,#4f46e5 100%);">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center">
+                    <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.12em;text-transform:uppercase;">Whim on Vim</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td class="body-cell body-text" style="padding:36px 40px 28px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#444;">
+              {{BODY}}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px;background:#fafafa;border-top:1px solid #eeeeee;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#aaa;text-align:center;">
+              Whim on Vim &nbsp;·&nbsp;
+              <a href="{{UNSUBSCRIBE_URL}}" style="color:#aaa;text-decoration:underline;">配信停止する</a>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

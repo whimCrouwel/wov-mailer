@@ -16,7 +16,7 @@ const NAV_ITEMS: { id: Screen; label: string; icon: React.ComponentType<{ classN
 ]
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('settings')
+  const [screen, setScreen] = useState<Screen>('compose')
   const [cloneCompose, setCloneCompose] = useState<ComposeState | null>(null)
   const [terminalOpen, setTerminalOpen] = useState(false)
 

@@ -18,6 +18,17 @@ export function useCompose(initial?: ComposeState | null) {
     window.api.listBases().then(setBases).catch(console.error)
   }, [])
 
+  // Auto-select first template if none is set
+  useEffect(() => {
+    if (compose.templateName) return
+    window.api.listTemplates().then(templates => {
+      if (templates.length > 0) {
+        const preferred = templates.find(t => t === 'minimal') ?? templates[0]
+        setCompose(prev => prev.templateName ? prev : { ...prev, templateName: preferred })
+      }
+    }).catch(console.error)
+  }, [])
+
   useEffect(() => {
     if (!compose.baseId) return
     window.api.listTables(compose.baseId).then(setTables).catch(console.error)

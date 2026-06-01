@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; background-color: #f5f5f5; }
+    table { border-collapse: collapse; }
+    .body-text h1 { font-size: 22px; font-weight: 700; color: #111; margin: 0 0 16px; }
+    .body-text h2 { font-size: 18px; font-weight: 600; color: #222; margin: 24px 0 12px; }
+    .body-text h3 { font-size: 15px; font-weight: 600; color: #333; margin: 20px 0 10px; }
+    .body-text p  { margin: 0 0 16px; }
+    .body-text ul, .body-text ol { margin: 0 0 16px; padding-left: 24px; }
+    .body-text li { margin-bottom: 6px; }
+    .body-text a  { color: #2563eb; text-decoration: underline; }
+    .body-text strong { font-weight: 600; }
+    .body-text blockquote { margin: 0 0 16px 0; padding: 10px 16px; border-left: 3px solid #ddd; color: #666; }
+    .body-text code { background: #f3f4f6; padding: 2px 5px; border-radius: 3px; font-family: monospace; font-size: 13px; }
+    @media only screen and (max-width: 620px) {
+      .outer { width: 100% !important; }
+      .inner { padding: 24px 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f5f5f5;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+
+        <!-- Card -->
+        <table class="outer" width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+
+          <!-- Top accent bar -->
+          <tr>
+            <td height="4" style="background:#111;font-size:0;line-height:0;">&nbsp;</td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td class="inner body-text" style="padding:36px 40px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#444;">
+              {{BODY}}
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td height="1" style="background:#eeeeee;font-size:0;line-height:0;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#999;text-align:center;">
+              Whim on Vim &nbsp;·&nbsp;
+              <a href="{{UNSUBSCRIBE_URL}}" style="color:#999;text-decoration:underline;">配信停止する</a>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /Card -->
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email</title>
+  <style type="text/css">
+    body { margin: 0; padding: 0; background-color: #ffffff; }
+    table { border-collapse: collapse; }
+    .body-text h1 { font-size: 26px; font-weight: 700; color: #111; margin: 0 0 14px; line-height: 1.3; }
+    .body-text h2 { font-size: 18px; font-weight: 600; color: #222; margin: 24px 0 12px; }
+    .body-text h3 { font-size: 15px; font-weight: 600; color: #333; margin: 20px 0 8px; }
+    .body-text p  { margin: 0 0 16px; }
+    .body-text ul, .body-text ol { margin: 0 0 16px; padding-left: 24px; }
+    .body-text li { margin-bottom: 8px; }
+    .body-text a  { color: #059669; text-decoration: underline; }
+    .body-text strong { font-weight: 700; color: #111; }
+    .body-text blockquote { margin: 0 0 16px; padding: 14px 18px; border-left: 4px solid #059669; color: #555; background: #f0fdf4; border-radius: 0 4px 4px 0; }
+    .body-text code { background: #ecfdf5; color: #065f46; padding: 2px 5px; border-radius: 3px; font-family: monospace; font-size: 13px; }
+    @media only screen and (max-width: 620px) {
+      .outer { width: 100% !important; }
+      .body-cell { padding: 28px 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
+    <tr>
+      <td align="center" style="padding:0 0 40px;">
+
+        <table class="outer" width="600" cellpadding="0" cellspacing="0" border="0">
+
+          <!-- Top bar -->
+          <tr>
+            <td height="6" style="background:#059669;font-size:0;line-height:0;">&nbsp;</td>
+          </tr>
+
+          <!-- Brand row -->
+          <tr>
+            <td style="padding:20px 40px 0;background:#ffffff;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <span style="font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;color:#059669;letter-spacing:0.06em;text-transform:uppercase;">Whim on Vim</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:16px 40px 0;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td height="1" style="background:#e5e7eb;font-size:0;line-height:0;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td class="body-cell body-text" style="padding:28px 40px;font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.8;color:#333;">
+              {{BODY}}
+            </td>
+          </tr>
+
+          <!-- Bottom divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td height="1" style="background:#e5e7eb;font-size:0;line-height:0;">&nbsp;</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 40px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#9ca3af;text-align:center;">
+              Whim on Vim &nbsp;·&nbsp;
+              <a href="{{UNSUBSCRIBE_URL}}" style="color:#9ca3af;text-decoration:underline;">配信停止する</a>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

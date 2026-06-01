@@ -8,24 +8,32 @@ function templateDir(): string {
     : path.join(os.homedir(), '.config', 'wov-mailer', 'templates')
 }
 
-function defaultTemplateSrc(): string {
-  // In dev: relative to src/main/; in prod: relative to out/main/
-  return path.join(__dirname, '../../templates/default.html')
+function bundledTemplateDir(): string {
+  // In dev: project root /templates/; in prod: two levels up from out/main/
+  return path.join(__dirname, '../../templates')
 }
 
 export async function ensureDefaultTemplate(): Promise<void> {
   const dir = templateDir()
-  const dest = path.join(dir, 'default.html')
   await fs.mkdir(dir, { recursive: true })
+
+  // Copy all bundled templates that don't already exist in the user's config dir
   try {
-    await fs.access(dest)
+    const srcDir = bundledTemplateDir()
+    const files = await fs.readdir(srcDir)
+    await Promise.all(
+      files.filter(f => f.endsWith('.html')).map(async (file) => {
+        const dest = path.join(dir, file)
+        try {
+          await fs.access(dest)
+        } catch {
+          const content = await fs.readFile(path.join(srcDir, file), 'utf-8')
+          await fs.writeFile(dest, content, 'utf-8')
+        }
+      })
+    )
   } catch {
-    try {
-      const src = await fs.readFile(defaultTemplateSrc(), 'utf-8')
-      await fs.writeFile(dest, src, 'utf-8')
-    } catch {
-      // defaultTemplateSrc not available (e.g. in test env) — skip
-    }
+    // bundled template dir not available (e.g. test env) — skip
   }
 }
 
@@ -33,7 +41,7 @@ export async function listTemplates(): Promise<string[]> {
   await ensureDefaultTemplate()
   try {
     const files = await fs.readdir(templateDir())
-    return files.filter(f => f.endsWith('.html')).map(f => f.replace('.html', ''))
+    return files.filter(f => f.endsWith('.html')).map(f => f.replace('.html', '')).sort()
   } catch {
     return []
   }
