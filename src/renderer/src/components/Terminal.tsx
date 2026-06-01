@@ -31,6 +31,7 @@ export function Terminal() {
       observer.disconnect()
       term.dispose()
       termRef.current = null
+      window.api.terminal.destroy()
     }
   }, [])
 

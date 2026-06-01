@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke(IPC.SEND_BROADCAST, compose),
   terminal: {
     create: () => ipcRenderer.send('terminal:create'),
+    destroy: () => ipcRenderer.send('terminal:destroy'),
     onData: (cb: (data: string) => void) => { ipcRenderer.on('terminal:data', (_e, data) => cb(data)) },
     sendInput: (input: string) => ipcRenderer.send('terminal:input', input),
     resize: (cols: number, rows: number) => ipcRenderer.send('terminal:resize', cols, rows),

@@ -17,6 +17,7 @@ declare global {
       sendBroadcast(compose: ComposeState): Promise<{ sent: number; failed: number; errors: string[] }>
       terminal: {
         create(): void
+        destroy(): void
         onData(cb: (data: string) => void): void
         sendInput(input: string): void
         resize(cols: number, rows: number): void

@@ -71,12 +71,23 @@ export function registerIpcHandlers(): void {
     }
   })
 
-  ipcMain.on('terminal:create', (event) => {
-    const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
+  // Only one PTY active at a time — reuse or kill on create
+  let activePty: ReturnType<typeof pty.spawn> | null = null
+  let activeOnInput: ((_e: Electron.IpcMainEvent, input: string) => void) | null = null
+  let activeOnResize: ((_e: Electron.IpcMainEvent, cols: number, rows: number) => void) | null = null
 
-    let ptyProcess: ReturnType<typeof pty.spawn>
+  const teardownTerminal = () => {
+    if (activeOnInput) { ipcMain.removeListener('terminal:input', activeOnInput); activeOnInput = null }
+    if (activeOnResize) { ipcMain.removeListener('terminal:resize', activeOnResize); activeOnResize = null }
+    if (activePty) { try { activePty.kill() } catch {} activePty = null }
+  }
+
+  ipcMain.on('terminal:create', (event) => {
+    teardownTerminal()
+
+    const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
     try {
-      ptyProcess = pty.spawn(shell, [], {
+      activePty = pty.spawn(shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 24,
@@ -90,18 +101,17 @@ export function registerIpcHandlers(): void {
       return
     }
 
+    const ptyProcess = activePty
     ptyProcess.onData(data => event.sender.send('terminal:data', data))
 
-    const onInput = (_e: Electron.IpcMainEvent, input: string) => ptyProcess.write(input)
-    const onResize = (_e: Electron.IpcMainEvent, cols: number, rows: number) => ptyProcess.resize(cols, rows)
+    activeOnInput = (_e, input) => ptyProcess.write(input)
+    activeOnResize = (_e, cols, rows) => ptyProcess.resize(cols, rows)
 
-    ipcMain.on('terminal:input', onInput)
-    ipcMain.on('terminal:resize', onResize)
+    ipcMain.on('terminal:input', activeOnInput)
+    ipcMain.on('terminal:resize', activeOnResize)
 
-    event.sender.on('destroyed', () => {
-      ipcMain.removeListener('terminal:input', onInput)
-      ipcMain.removeListener('terminal:resize', onResize)
-      ptyProcess.kill()
-    })
+    event.sender.on('destroyed', teardownTerminal)
   })
+
+  ipcMain.on('terminal:destroy', teardownTerminal)
 }
