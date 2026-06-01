@@ -16,4 +16,14 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.invoke(IPC.AIRTABLE_PREVIEW_RECIPIENTS, baseId, tableId, emailField, filters),
   fetchRecipients: (baseId: string, tableId: string, emailField: string, filters: FilterCondition[]) =>
     ipcRenderer.invoke(IPC.AIRTABLE_FETCH_RECIPIENTS, baseId, tableId, emailField, filters),
+  listTemplates: (): Promise<string[]> => ipcRenderer.invoke(IPC.TEMPLATES_LIST),
+  getTemplate: (name: string): Promise<string> => ipcRenderer.invoke(IPC.TEMPLATES_GET, name),
+  sendBroadcast: (compose: ComposeState): Promise<{ sent: number; failed: number; errors: string[] }> =>
+    ipcRenderer.invoke(IPC.SEND_BROADCAST, compose),
+  terminal: {
+    create: () => ipcRenderer.send('terminal:create'),
+    onData: (cb: (data: string) => void) => { ipcRenderer.on('terminal:data', (_e, data) => cb(data)) },
+    sendInput: (input: string) => ipcRenderer.send('terminal:input', input),
+    resize: (cols: number, rows: number) => ipcRenderer.send('terminal:resize', cols, rows),
+  },
 })

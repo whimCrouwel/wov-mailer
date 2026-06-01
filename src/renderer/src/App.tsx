@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Settings } from './screens/Settings'
 import { History } from './screens/History'
+import { Compose } from './screens/Compose'
 import type { ComposeState } from '../../shared/types'
 
 type Screen = 'compose' | 'history' | 'settings'
@@ -30,7 +31,12 @@ export default function App() {
       </nav>
       <main style={{ flex: 1, overflow: 'auto' }}>
         {screen === 'settings' && <Settings />}
-        {screen === 'compose' && <div style={{ padding: 24 }}>Compose — coming soon</div>}
+        {screen === 'compose' && (
+          <Compose
+            initial={cloneCompose}
+            onSent={() => { setCloneCompose(null); setScreen('history') }}
+          />
+        )}
         {screen === 'history' && (
           <History onClone={compose => { setCloneCompose(compose); setScreen('compose') }} />
         )}
