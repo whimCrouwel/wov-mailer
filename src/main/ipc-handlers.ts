@@ -46,40 +46,62 @@ export function registerIpcHandlers(): void {
   ipcMain.handle(IPC.TEMPLATES_GET, async (_event, name: string) => getTemplate(name))
 
   ipcMain.handle(IPC.SEND_BROADCAST, async (_event, compose: ComposeState) => {
-    const config = await getConfig()
-    const recipients = await fetchRecipients(
-      config.airtableToken, compose.baseId, compose.tableId, compose.emailField, compose.filters
-    )
-    const result = await sendBroadcast(
-      config.resendApiKey, config.senderName, config.senderEmail, recipients, compose
-    )
-    await appendHistory({
-      id: randomUUID(),
-      sentAt: new Date().toISOString(),
-      subject: compose.subject,
-      recipientCount: result.sent,
-      status: result.failed === 0 ? 'sent' : 'failed',
-      errorMessage: result.errors.join('; ') || undefined,
-      compose,
-    })
-    return result
+    try {
+      const config = await getConfig()
+      const recipients = await fetchRecipients(
+        config.airtableToken, compose.baseId, compose.tableId, compose.emailField, compose.filters
+      )
+      const result = await sendBroadcast(
+        config.resendApiKey, config.senderName, config.senderEmail, recipients, compose
+      )
+      await appendHistory({
+        id: randomUUID(),
+        sentAt: new Date().toISOString(),
+        subject: compose.subject,
+        recipientCount: result.sent,
+        status: result.failed === 0 ? 'sent' : 'failed',
+        errorMessage: result.errors.join('; ') || undefined,
+        compose,
+      })
+      return { success: true, ...result }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      console.error('[ipc SEND_BROADCAST] error:', message)
+      return { success: false, error: message, sent: 0, failed: 0, errors: [message] }
+    }
   })
 
   ipcMain.on('terminal:create', (event) => {
     const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
-    const ptyProcess = pty.spawn(shell, [], {
-      name: 'xterm-color',
-      cols: 80,
-      rows: 24,
-      cwd: os.homedir(),
-      env: process.env as Record<string, string>,
-    })
+
+    let ptyProcess: ReturnType<typeof pty.spawn>
+    try {
+      ptyProcess = pty.spawn(shell, [], {
+        name: 'xterm-color',
+        cols: 80,
+        rows: 24,
+        cwd: os.homedir(),
+        env: process.env as Record<string, string>,
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      console.error('[terminal:create] spawn failed:', message)
+      event.sender.send('terminal:data', `\r\nFailed to start terminal: ${message}\r\n`)
+      return
+    }
 
     ptyProcess.onData(data => event.sender.send('terminal:data', data))
 
-    ipcMain.on('terminal:input', (_e, input: string) => ptyProcess.write(input))
-    ipcMain.on('terminal:resize', (_e, cols: number, rows: number) => ptyProcess.resize(cols, rows))
+    const onInput = (_e: Electron.IpcMainEvent, input: string) => ptyProcess.write(input)
+    const onResize = (_e: Electron.IpcMainEvent, cols: number, rows: number) => ptyProcess.resize(cols, rows)
 
-    event.sender.on('destroyed', () => ptyProcess.kill())
+    ipcMain.on('terminal:input', onInput)
+    ipcMain.on('terminal:resize', onResize)
+
+    event.sender.on('destroyed', () => {
+      ipcMain.removeListener('terminal:input', onInput)
+      ipcMain.removeListener('terminal:resize', onResize)
+      ptyProcess.kill()
+    })
   })
 }
