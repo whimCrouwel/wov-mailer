@@ -10,6 +10,7 @@ interface Props {
 export function SendButton({ compose, recipientCount, onSent }: Props) {
   const [sending, setSending] = useState(false)
   const [result, setResult] = useState<{ sent: number; failed: number } | null>(null)
+  const [sendError, setSendError] = useState<string | null>(null)
 
   const canSend = !!(compose.tableId && compose.subject && compose.body && compose.templateName)
 
@@ -21,10 +22,19 @@ export function SendButton({ compose, recipientCount, onSent }: Props) {
     if (!confirmed) return
 
     setSending(true)
+    setSendError(null)
     try {
       const res = await window.api.sendBroadcast(compose)
+      if (res.success === false) {
+        setSendError(res.error ?? 'Unknown error')
+        return
+      }
       setResult(res)
-      onSent()
+      if (res.failed === 0) {
+        onSent()
+      }
+    } catch (err) {
+      setSendError(err instanceof Error ? err.message : String(err))
     } finally {
       setSending(false)
     }
@@ -47,9 +57,21 @@ export function SendButton({ compose, recipientCount, onSent }: Props) {
       >
         {sending ? 'Sending…' : `Send to ${recipientCount ?? '…'} recipients`}
       </button>
+      {sendError && (
+        <div style={{ marginTop: 8, color: 'red', fontSize: 13 }}>
+          Error: {sendError}
+        </div>
+      )}
       {result && (
         <div style={{ marginTop: 8, color: result.failed === 0 ? 'green' : 'orange' }}>
           Sent: {result.sent} | Failed: {result.failed}
+          {result.failed > 0 && (result as { errors?: string[] }).errors?.length ? (
+            <ul style={{ margin: '4px 0 0 16px', fontSize: 12 }}>
+              {(result as { errors: string[] }).errors.map((e, i) => (
+                <li key={i}>{e}</li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       )}
     </div>

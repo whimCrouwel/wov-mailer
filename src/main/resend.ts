@@ -37,7 +37,7 @@ export async function sendBroadcast(
       const html = await renderTemplate(compose.templateName, applyMergeTags(bodyHtml, recipient.mergeData), unsubscribeUrl)
       const subject = applyMergeTags(compose.subject, recipient.mergeData)
 
-      await resend.emails.send({
+      const { data, error } = await resend.emails.send({
         from: `${senderName} <${senderEmail}>`,
         to: recipient.email,
         subject,
@@ -47,6 +47,10 @@ export async function sendBroadcast(
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
         },
       })
+      if (error) {
+        throw new Error(`Resend error: ${JSON.stringify(error)}`)
+      }
+      console.log(`[resend] sent to ${recipient.email}, id=${data?.id}`)
       sent++
     } catch (err) {
       failed++
