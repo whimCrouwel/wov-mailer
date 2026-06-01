@@ -9,7 +9,12 @@ function templateDir(): string {
 }
 
 function bundledTemplateDir(): string {
-  // In dev: project root /templates/; in prod: two levels up from out/main/
+  // Packaged app: templates are in extraResources → process.resourcesPath/templates
+  // Dev/build: two levels up from out/main/
+  if (process.resourcesPath && !process.env.WOV_CONFIG_DIR) {
+    const packed = path.join(process.resourcesPath, 'templates')
+    return packed
+  }
   return path.join(__dirname, '../../templates')
 }
 

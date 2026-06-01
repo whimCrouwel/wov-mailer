@@ -7,9 +7,25 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
+    "dist": "electron-vite build && electron-builder",
     "test": "vitest run",
     "test:watch": "vitest",
     "postinstall": "electron-rebuild -f -w node-pty"
+  },
+  "build": {
+    "appId": "com.whimonvim.mailer",
+    "productName": "wov-mailer",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [{ "target": "dmg", "arch": ["arm64", "x64"] }]
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "extraResources": [
+      { "from": "templates", "to": "templates" }
+    ],
+    "npmRebuild": true
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
@@ -24,6 +40,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.5.0",
     "electron": "^28.0.0",
+    "electron-builder": "^26.8.1",
     "electron-vite": "^2.0.0",
     "jsdom": "^24.0.0",
     "postcss": "^8.5.15",
