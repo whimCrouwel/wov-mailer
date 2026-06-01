@@ -75,7 +75,10 @@ export function History({ onClone }: Props) {
                 </div>
 
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <RecipientListDialog compose={entry.compose} recipientCount={entry.recipientCount} />
+                  {entry.recipients
+                    ? <RecipientListDialog staticRecipients={entry.recipients} recipientCount={entry.recipientCount} />
+                    : <RecipientListDialog compose={entry.compose} recipientCount={entry.recipientCount} />
+                  }
                   <Button
                     variant="outline"
                     size="sm"

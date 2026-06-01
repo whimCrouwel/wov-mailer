@@ -3,36 +3,44 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '../ui/button'
 import { ScrollArea } from '../ui/scroll-area'
 import { Users, Loader2 } from 'lucide-react'
-import type { ComposeState, Recipient } from '../../../../../shared/types'
+import type { ComposeState } from '../../../../../shared/types'
 
-interface Props {
+interface StaticProps {
+  // History mode: show saved snapshot, no Airtable fetch
+  staticRecipients: { email: string; name: string }[]
+  compose?: never
+}
+
+interface LiveProps {
+  // Compose mode: fetch live from Airtable
   compose: ComposeState
-  recipientCount: number | null
+  staticRecipients?: never
 }
 
-function guessName(mergeData: Record<string, string>): string {
-  const nameKeys = ['name', 'Name', '名前', '氏名', 'full_name', 'fullname', 'first_name', 'firstName']
-  for (const key of nameKeys) {
-    if (mergeData[key]) return mergeData[key]
-  }
-  // Fall back to first non-empty string value
-  const first = Object.values(mergeData).find(v => v.trim())
-  return first ?? '—'
-}
+type Props = (StaticProps | LiveProps) & { recipientCount: number | null }
 
-export function RecipientListDialog({ compose, recipientCount }: Props) {
+export function RecipientListDialog({ compose, staticRecipients, recipientCount }: Props) {
   const [open, setOpen] = useState(false)
-  const [recipients, setRecipients] = useState<Recipient[]>([])
+  const [fetched, setFetched] = useState<{ email: string; name: string }[]>([])
   const [loading, setLoading] = useState(false)
 
-  async function load() {
-    if (!compose.baseId || !compose.tableId || !compose.emailField) return
+  const isStatic = staticRecipients !== undefined
+  const displayed = isStatic ? staticRecipients : fetched
+
+  async function loadLive() {
+    if (!compose?.baseId || !compose?.tableId || !compose?.emailField) return
     setLoading(true)
     try {
       const list = await window.api.fetchRecipients(
         compose.baseId, compose.tableId, compose.emailField, compose.filters
       )
-      setRecipients(list)
+      const nameKeys = ['name', 'Name', '名前', '氏名', 'full_name', 'fullname', 'first_name', 'firstName']
+      setFetched(list.map(r => ({
+        email: r.email,
+        name: nameKeys.map(k => r.mergeData[k]).find(Boolean)
+          ?? Object.values(r.mergeData).find(v => v?.trim())
+          ?? '—',
+      })))
     } finally {
       setLoading(false)
     }
@@ -40,11 +48,11 @@ export function RecipientListDialog({ compose, recipientCount }: Props) {
 
   function handleOpenChange(next: boolean) {
     setOpen(next)
-    if (next) load()
-    else setRecipients([])
+    if (next && !isStatic) loadLive()
+    if (!next) setFetched([])
   }
 
-  const disabled = !compose.baseId || !compose.tableId
+  const disabled = !isStatic && (!compose?.baseId || !compose?.tableId)
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -64,7 +72,12 @@ export function RecipientListDialog({ compose, recipientCount }: Props) {
         <DialogHeader>
           <DialogTitle>Recipients</DialogTitle>
           <DialogDescription>
-            {loading ? 'Loading…' : `${recipients.length} recipient${recipients.length !== 1 ? 's' : ''} match the current filters`}
+            {loading
+              ? 'Loading…'
+              : isStatic
+                ? `${displayed.length} recipient${displayed.length !== 1 ? 's' : ''} who received this email`
+                : `${displayed.length} recipient${displayed.length !== 1 ? 's' : ''} match the current filters`
+            }
           </DialogDescription>
         </DialogHeader>
 
@@ -74,7 +87,7 @@ export function RecipientListDialog({ compose, recipientCount }: Props) {
               <Loader2 className="w-5 h-5 animate-spin mr-2" />
               Fetching recipients…
             </div>
-          ) : recipients.length === 0 ? (
+          ) : displayed.length === 0 ? (
             <div className="py-12 text-center text-sm text-zinc-500">No recipients found.</div>
           ) : (
             <table className="w-full text-sm">
@@ -85,10 +98,10 @@ export function RecipientListDialog({ compose, recipientCount }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {recipients.map((r, i) => (
+                {displayed.map((r, i) => (
                   <tr key={i} className="border-b border-zinc-800/50 hover:bg-zinc-800/30">
                     <td className="px-6 py-3 text-zinc-300 truncate max-w-0 w-2/5">
-                      <span className="block truncate">{guessName(r.mergeData)}</span>
+                      <span className="block truncate">{r.name || '—'}</span>
                     </td>
                     <td className="px-6 py-3 text-zinc-400 truncate max-w-0">
                       <span className="block truncate">{r.email}</span>

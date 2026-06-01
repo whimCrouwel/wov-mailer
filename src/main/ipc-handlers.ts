@@ -65,6 +65,13 @@ export function registerIpcHandlers(): void {
       const result = await sendBroadcast(
         config.resendApiKey, config.senderName, config.senderEmail, recipients, compose
       )
+      const nameKeys = ['name', 'Name', '名前', '氏名', 'full_name', 'fullname', 'first_name', 'firstName']
+      const savedRecipients = recipients.map(r => {
+        const name = nameKeys.map(k => r.mergeData[k]).find(Boolean)
+          ?? Object.values(r.mergeData).find(v => v.trim())
+          ?? ''
+        return { email: r.email, name }
+      })
       await appendHistory({
         id: randomUUID(),
         sentAt: new Date().toISOString(),
@@ -73,6 +80,7 @@ export function registerIpcHandlers(): void {
         status: result.failed === 0 ? 'sent' : 'failed',
         errorMessage: result.errors.join('; ') || undefined,
         compose,
+        recipients: savedRecipients,
       })
       return { success: true, ...result }
     } catch (err) {

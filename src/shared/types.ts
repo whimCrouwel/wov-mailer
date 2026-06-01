@@ -32,6 +32,7 @@ export interface HistoryEntry {
   status: 'sent' | 'failed'
   errorMessage?: string
   compose: ComposeState
+  recipients?: { email: string; name: string }[]
 }
 
 export interface AirtableBase {
