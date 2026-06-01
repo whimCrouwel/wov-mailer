@@ -21,13 +21,13 @@ export function EmailPreview({ body, templateHtml }: Props) {
   }, [body, templateHtml])
 
   return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>Preview</label>
+    <div className="space-y-2">
       <iframe
         srcDoc={html}
-        style={{ width: '100%', height: 400, border: '1px solid #ddd', borderRadius: 4 }}
+        className="w-full h-96 rounded-md border border-zinc-700 bg-white"
         title="Email Preview"
       />
+      <p className="text-xs text-zinc-600">Preview uses placeholder data. Actual emails will use recipient field values.</p>
     </div>
   )
 }

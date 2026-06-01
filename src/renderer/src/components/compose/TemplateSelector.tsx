@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Label } from '../ui/label'
 
 interface Props {
   value: string
@@ -13,12 +15,21 @@ export function TemplateSelector({ value, onChange }: Props) {
   }, [])
 
   return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>Template</label>
-      <select value={value} onChange={e => onChange(e.target.value)} style={{ padding: '6px 8px' }}>
-        <option value="">Select template…</option>
-        {templates.map(t => <option key={t} value={t}>{t}</option>)}
-      </select>
+    <div className="space-y-2">
+      <Label className="text-xs uppercase tracking-wide text-zinc-500">HTML Template</Label>
+      <Select
+        value={value || undefined}
+        onValueChange={onChange}
+      >
+        <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
+          <SelectValue placeholder="Select template…" />
+        </SelectTrigger>
+        <SelectContent>
+          {templates.map(t => (
+            <SelectItem key={t} value={t}>{t}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   )
 }

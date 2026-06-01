@@ -1,3 +1,7 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { Plus, X } from 'lucide-react'
 import type { AirtableField, FilterCondition } from '../../../../../shared/types'
 
 interface Props {
@@ -44,38 +48,68 @@ export function FilterBuilder({ fields, filters, onChange }: Props) {
   }
 
   return (
-    <div>
+    <div className="space-y-2">
       {filters.map((filter, i) => {
         const field = nonEmailFields.find(f => f.name === filter.field) ?? nonEmailFields[0]
         const ops = operatorsFor(field?.type ?? 'singleLineText')
         return (
-          <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-            <select
+          <div key={i} className="flex gap-2 items-center">
+            <Select
               value={filter.field}
-              onChange={e => {
-                const f = nonEmailFields.find(x => x.name === e.target.value)!
+              onValueChange={value => {
+                const f = nonEmailFields.find(x => x.name === value)!
                 updateCondition(i, { field: f.name, fieldType: f.type, operator: 'equals', value: '' })
               }}
             >
-              {nonEmailFields.map(f => <option key={f.id} value={f.name}>{f.name}</option>)}
-            </select>
-            <select
+              <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500 w-40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {nonEmailFields.map(f => <SelectItem key={f.id} value={f.name}>{f.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Select
               value={filter.operator}
-              onChange={e => updateCondition(i, { operator: e.target.value as FilterCondition['operator'] })}
+              onValueChange={value => updateCondition(i, { operator: value as FilterCondition['operator'] })}
             >
-              {ops.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-            <input
+              <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500 w-28">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {ops.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+
+            <Input
               value={filter.value}
               onChange={e => updateCondition(i, { value: e.target.value })}
               placeholder="value"
-              style={{ flex: 1, padding: '4px 6px' }}
+              className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-zinc-500"
             />
-            <button onClick={() => removeCondition(i)}>✕</button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => removeCondition(i)}
+              className="text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700 flex-shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </Button>
           </div>
         )
       })}
-      <button onClick={addCondition}>Add Condition</button>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={addCondition}
+        disabled={nonEmailFields.length === 0}
+        className="mt-1 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 bg-transparent"
+      >
+        <Plus className="w-3.5 h-3.5 mr-1.5" />
+        Add Condition
+      </Button>
     </div>
   )
 }

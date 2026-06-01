@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { Send, Loader2, CheckCircle2, AlertCircle } from 'lucide-react'
 import type { ComposeState } from '../../../../../shared/types'
 
 interface Props {
@@ -9,7 +12,7 @@ interface Props {
 
 export function SendButton({ compose, recipientCount, onSent }: Props) {
   const [sending, setSending] = useState(false)
-  const [result, setResult] = useState<{ sent: number; failed: number } | null>(null)
+  const [result, setResult] = useState<{ sent: number; failed: number; errors?: string[] } | null>(null)
   const [sendError, setSendError] = useState<string | null>(null)
 
   const canSend = !!(compose.tableId && compose.subject && compose.body && compose.templateName)
@@ -25,8 +28,8 @@ export function SendButton({ compose, recipientCount, onSent }: Props) {
     setSendError(null)
     try {
       const res = await window.api.sendBroadcast(compose)
-      if (res.success === false) {
-        setSendError(res.error ?? 'Unknown error')
+      if ((res as { success?: boolean }).success === false) {
+        setSendError((res as { error?: string }).error ?? 'Unknown error')
         return
       }
       setResult(res)
@@ -41,35 +44,62 @@ export function SendButton({ compose, recipientCount, onSent }: Props) {
   }
 
   return (
-    <div>
-      <button
-        onClick={handleSend}
-        disabled={!canSend || sending}
-        style={{
-          padding: '10px 24px',
-          background: canSend ? '#1a1a2e' : '#ccc',
-          color: '#fff',
-          border: 'none',
-          borderRadius: 4,
-          cursor: canSend ? 'pointer' : 'default',
-          fontSize: 15,
-        }}
-      >
-        {sending ? 'Sending…' : `Send to ${recipientCount ?? '…'} recipients`}
-      </button>
+    <div className="space-y-3">
+      {!canSend && (
+        <p className="text-xs text-zinc-600">
+          Complete all steps above (base, table, template, subject, and body) to send.
+        </p>
+      )}
+
+      <div className="flex items-center gap-3">
+        <Button
+          onClick={handleSend}
+          disabled={!canSend || sending}
+          size="lg"
+          className="bg-zinc-100 text-zinc-900 hover:bg-zinc-200 disabled:opacity-40 font-semibold px-8"
+        >
+          {sending ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Sending…
+            </>
+          ) : (
+            <>
+              <Send className="w-4 h-4 mr-2" />
+              Send to {recipientCount !== null ? recipientCount : '…'} recipients
+            </>
+          )}
+        </Button>
+
+        {recipientCount !== null && recipientCount > 0 && (
+          <Badge variant="outline" className="border-zinc-700 text-zinc-400 text-xs">
+            {recipientCount} emails will be sent
+          </Badge>
+        )}
+      </div>
+
       {sendError && (
-        <div style={{ marginTop: 8, color: 'red', fontSize: 13 }}>
-          Error: {sendError}
+        <div className="flex items-center gap-2 text-sm text-red-400">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <span>Error: {sendError}</span>
         </div>
       )}
+
       {result && (
-        <div style={{ marginTop: 8, color: result.failed === 0 ? 'green' : 'orange' }}>
-          Sent: {result.sent} | Failed: {result.failed}
-          {result.failed > 0 && (result as { errors?: string[] }).errors?.length ? (
-            <ul style={{ margin: '4px 0 0 16px', fontSize: 12 }}>
-              {(result as { errors: string[] }).errors.map((e, i) => (
-                <li key={i}>{e}</li>
-              ))}
+        <div className={`space-y-1 text-sm ${result.failed === 0 ? 'text-emerald-400' : 'text-amber-400'}`}>
+          <div className="flex items-center gap-2">
+            {result.failed === 0
+              ? <CheckCircle2 className="w-4 h-4" />
+              : <AlertCircle className="w-4 h-4" />
+            }
+            <span>
+              Sent: <strong>{result.sent}</strong>
+              {result.failed > 0 && <> · Failed: <strong>{result.failed}</strong></>}
+            </span>
+          </div>
+          {result.failed > 0 && result.errors?.length ? (
+            <ul className="ml-6 text-xs space-y-0.5 text-amber-500">
+              {result.errors.map((e, i) => <li key={i}>{e}</li>)}
             </ul>
           ) : null}
         </div>

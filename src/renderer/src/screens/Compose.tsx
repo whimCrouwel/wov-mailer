@@ -6,6 +6,12 @@ import { TemplateSelector } from '../components/compose/TemplateSelector'
 import { MarkdownEditor } from '../components/compose/MarkdownEditor'
 import { EmailPreview } from '../components/compose/EmailPreview'
 import { SendButton } from '../components/compose/SendButton'
+import { Badge } from '../components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Label } from '../components/ui/label'
+import { Input } from '../components/ui/input'
+import { Separator } from '../components/ui/separator'
+import { Users, Filter, FileText, Mail, Eye } from 'lucide-react'
 import type { ComposeState } from '../../../shared/types'
 
 interface Props {
@@ -25,57 +31,135 @@ export function Compose({ initial, onSent }: Props) {
   const selectedTable = tables.find(t => t.id === compose.tableId)
 
   return (
-    <div style={{ padding: 24, maxWidth: 720 }}>
-      <h2>New Broadcast</h2>
-
-      <BaseTableSelector
-        bases={bases}
-        tables={tables}
-        selectedBaseId={compose.baseId}
-        selectedTableId={compose.tableId}
-        onSelectBase={selectBase}
-        onSelectTable={selectTable}
-      />
-
-      {selectedTable && (
-        <>
-          <div style={{ marginBottom: 8, fontSize: 13, color: '#666' }}>Filters (AND logic)</div>
-          <FilterBuilder
-            fields={selectedTable.fields}
-            filters={compose.filters}
-            onChange={filters => setCompose(c => ({ ...c, filters }))}
-          />
-          <div style={{ marginBottom: 16, fontSize: 13, color: loading ? '#888' : '#333' }}>
-            {loading ? 'Counting…' : `${recipientCount ?? 0} recipients`}
-          </div>
-        </>
-      )}
-
-      <TemplateSelector
-        value={compose.templateName}
-        onChange={templateName => setCompose(c => ({ ...c, templateName }))}
-      />
-
-      <div style={{ marginBottom: 16 }}>
-        <label style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>Subject</label>
-        <input
-          value={compose.subject}
-          onChange={e => setCompose(c => ({ ...c, subject: e.target.value }))}
-          style={{ width: '100%', padding: '6px 8px', boxSizing: 'border-box' }}
-          placeholder="Subject line…"
-        />
+    <div className="p-8 max-w-2xl space-y-5">
+      <div className="mb-2">
+        <h1 className="text-xl font-semibold text-zinc-100">New Broadcast</h1>
+        <p className="text-sm text-zinc-500 mt-1">Compose and send an email broadcast to your Airtable contacts.</p>
       </div>
 
-      <MarkdownEditor
-        value={compose.body}
-        onChange={body => setCompose(c => ({ ...c, body }))}
-      />
+      {/* Step 1: Source */}
+      <Card className="bg-zinc-900 border-zinc-800">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-zinc-700 text-zinc-300 text-xs flex items-center justify-center font-bold">1</span>
+            Data Source
+          </CardTitle>
+        </CardHeader>
+        <Separator className="bg-zinc-800" />
+        <CardContent className="pt-4">
+          <BaseTableSelector
+            bases={bases}
+            tables={tables}
+            selectedBaseId={compose.baseId}
+            selectedTableId={compose.tableId}
+            onSelectBase={selectBase}
+            onSelectTable={selectTable}
+          />
+        </CardContent>
+      </Card>
 
-      {compose.templateName && compose.body && (
-        <EmailPreview body={compose.body} templateHtml={templateHtml} />
+      {/* Step 2: Filters */}
+      {selectedTable && (
+        <Card className="bg-zinc-900 border-zinc-800">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-zinc-700 text-zinc-300 text-xs flex items-center justify-center font-bold">2</span>
+                <Filter className="w-3.5 h-3.5" />
+                Filters
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                {loading
+                  ? <Badge variant="secondary" className="text-xs">Counting…</Badge>
+                  : (
+                    <Badge variant="outline" className="text-xs border-zinc-700 text-zinc-300 flex items-center gap-1">
+                      <Users className="w-3 h-3" />
+                      {recipientCount ?? 0} recipients
+                    </Badge>
+                  )}
+              </div>
+            </div>
+          </CardHeader>
+          <Separator className="bg-zinc-800" />
+          <CardContent className="pt-4">
+            <p className="text-xs text-zinc-600 mb-3">Conditions are combined with AND logic. Email field is always included.</p>
+            <FilterBuilder
+              fields={selectedTable.fields}
+              filters={compose.filters}
+              onChange={filters => setCompose(c => ({ ...c, filters }))}
+            />
+          </CardContent>
+        </Card>
       )}
 
-      <SendButton compose={compose} recipientCount={recipientCount} onSent={onSent} />
+      {/* Step 3: Template & Subject */}
+      <Card className="bg-zinc-900 border-zinc-800">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-zinc-700 text-zinc-300 text-xs flex items-center justify-center font-bold">3</span>
+            <FileText className="w-3.5 h-3.5" />
+            Template &amp; Subject
+          </CardTitle>
+        </CardHeader>
+        <Separator className="bg-zinc-800" />
+        <CardContent className="pt-4 space-y-4">
+          <TemplateSelector
+            value={compose.templateName}
+            onChange={templateName => setCompose(c => ({ ...c, templateName }))}
+          />
+          <div className="space-y-2">
+            <Label className="text-zinc-400 flex items-center gap-2 text-xs uppercase tracking-wide">
+              <Mail className="w-3.5 h-3.5" />
+              Subject Line
+            </Label>
+            <Input
+              value={compose.subject}
+              onChange={e => setCompose(c => ({ ...c, subject: e.target.value }))}
+              className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-zinc-500"
+              placeholder="Subject line…"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Step 4: Body */}
+      <Card className="bg-zinc-900 border-zinc-800">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+            <span className="w-5 h-5 rounded-full bg-zinc-700 text-zinc-300 text-xs flex items-center justify-center font-bold">4</span>
+            Email Body
+          </CardTitle>
+        </CardHeader>
+        <Separator className="bg-zinc-800" />
+        <CardContent className="pt-4">
+          <MarkdownEditor
+            value={compose.body}
+            onChange={body => setCompose(c => ({ ...c, body }))}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Step 5: Preview */}
+      {compose.templateName && compose.body && (
+        <Card className="bg-zinc-900 border-zinc-800">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-medium text-zinc-400 flex items-center gap-2">
+              <span className="w-5 h-5 rounded-full bg-zinc-700 text-zinc-300 text-xs flex items-center justify-center font-bold">5</span>
+              <Eye className="w-3.5 h-3.5" />
+              Preview
+            </CardTitle>
+          </CardHeader>
+          <Separator className="bg-zinc-800" />
+          <CardContent className="pt-4">
+            <EmailPreview body={compose.body} templateHtml={templateHtml} />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Send */}
+      <div className="pb-4">
+        <SendButton compose={compose} recipientCount={recipientCount} onSent={onSent} />
+      </div>
     </div>
   )
 }

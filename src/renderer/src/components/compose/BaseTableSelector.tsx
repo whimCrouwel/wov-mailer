@@ -1,3 +1,5 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Label } from '../ui/label'
 import type { AirtableBase, AirtableTable } from '../../../../../shared/types'
 
 interface Props {
@@ -11,35 +13,46 @@ interface Props {
 
 export function BaseTableSelector({ bases, tables, selectedBaseId, selectedTableId, onSelectBase, onSelectTable }: Props) {
   return (
-    <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-      <div>
-        <label style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>Base</label>
-        <select
-          value={selectedBaseId}
-          onChange={e => {
-            const base = bases.find(b => b.id === e.target.value)
+    <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label className="text-xs uppercase tracking-wide text-zinc-500">Base</Label>
+        <Select
+          value={selectedBaseId || undefined}
+          onValueChange={value => {
+            const base = bases.find(b => b.id === value)
             if (base) onSelectBase(base)
           }}
-          style={{ padding: '6px 8px' }}
         >
-          <option value="">Select base…</option>
-          {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-        </select>
+          <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
+            <SelectValue placeholder="Select base…" />
+          </SelectTrigger>
+          <SelectContent>
+            {bases.map(b => (
+              <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-      <div>
-        <label style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>Table</label>
-        <select
-          value={selectedTableId}
-          onChange={e => {
-            const table = tables.find(t => t.id === e.target.value)
+
+      <div className="space-y-2">
+        <Label className="text-xs uppercase tracking-wide text-zinc-500">Table</Label>
+        <Select
+          value={selectedTableId || undefined}
+          onValueChange={value => {
+            const table = tables.find(t => t.id === value)
             if (table) onSelectTable(table)
           }}
-          style={{ padding: '6px 8px' }}
           disabled={tables.length === 0}
         >
-          <option value="">Select table…</option>
-          {tables.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-        </select>
+          <SelectTrigger className="bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500 disabled:opacity-40">
+            <SelectValue placeholder="Select table…" />
+          </SelectTrigger>
+          <SelectContent>
+            {tables.map(t => (
+              <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   )
