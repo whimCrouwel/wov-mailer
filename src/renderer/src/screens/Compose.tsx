@@ -12,6 +12,7 @@ import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Separator } from '../components/ui/separator'
 import { Users, Filter, FileText, Mail, Eye } from 'lucide-react'
+import { RecipientListDialog } from '../components/compose/RecipientListDialog'
 import type { ComposeState, Recipient } from '../../../shared/types'
 
 interface Props {
@@ -83,6 +84,7 @@ export function Compose({ initial, onSent }: Props) {
                       {recipientCount ?? 0} recipients
                     </Badge>
                   )}
+                <RecipientListDialog compose={compose} recipientCount={recipientCount} />
               </div>
             </div>
           </CardHeader>
