@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>wov-mailer — Airtable × Resend でかんたんメール一斉送信</title>
+  <meta name="description" content="Airtableの連絡先リストから、Resend経由でHTMLメールを一斉送信できるmacOSデスクトップアプリ。フィルター・差し込み変数・送信履歴管理まで。無料・オープンソース。" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --surface2: #242424;
+      --border: #2e2e2e;
+      --text: #e8e8e8;
+      --muted: #888;
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --accent-dim: rgba(124,58,237,0.15);
+      --green: #22c55e;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    a { color: var(--accent-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,15,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 56px;
+    }
+    .nav-logo { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; color: var(--text); }
+    .nav-logo span { color: var(--accent-light); }
+    .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--muted); }
+    .nav-links a { color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .nav-cta:hover { background: #6d28d9; text-decoration: none; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 6rem 1.5rem 5rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(124,58,237,0.3);
+      color: var(--accent-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent-light); }
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #6d28d9; text-decoration: none; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface2);
+      color: var(--text);
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+      transition: border-color 0.15s;
+    }
+    .btn-secondary:hover { border-color: #555; text-decoration: none; }
+
+    /* ── App mockup ── */
+    .mockup-wrap {
+      max-width: 900px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+    }
+    .mockup {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    }
+    .mockup-bar {
+      background: #111;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .mockup-body {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      min-height: 380px;
+    }
+    .mockup-sidebar {
+      background: #141414;
+      border-right: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+    .sidebar-item {
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .sidebar-item.active {
+      background: var(--accent-dim);
+      color: var(--accent-light);
+      border-right: 2px solid var(--accent);
+    }
+    .sidebar-icon { width: 14px; height: 14px; border-radius: 3px; background: currentColor; opacity: 0.6; flex-shrink: 0; }
+    .mockup-main { padding: 1.5rem; }
+    .mockup-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .mockup-field {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .mockup-textarea {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      height: 90px;
+      line-height: 1.6;
+    }
+    .mockup-send {
+      display: inline-block;
+      margin-top: 0.75rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+    }
+
+    /* ── Sections ── */
+    section { max-width: 960px; margin: 0 auto; padding: 4rem 1.5rem; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-light);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); max-width: 520px; font-size: 0.95rem; }
+
+    /* ── Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: border-color 0.15s;
+    }
+    .feature-card:hover { border-color: rgba(124,58,237,0.4); }
+    .feature-icon {
+      width: 40px; height: 40px;
+      background: var(--accent-dim);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+    .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── How it works ── */
+    .steps { margin-top: 3rem; display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--accent-light);
+      flex-shrink: 0;
+    }
+    .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .step p { font-size: 0.875rem; color: var(--muted); }
+    .step code {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.4rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.8rem;
+      color: var(--accent-light);
+    }
+
+    /* ── Requirements ── */
+    .req-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .req-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .req-dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-top: 0.45rem;
+      flex-shrink: 0;
+    }
+    .req-card h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .req-card p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 5rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .cta-section h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cta-section p { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .mockup-body { grid-template-columns: 1fr; }
+      .mockup-sidebar { display: none; }
+      .nav-links { display: none; }
+      .mockup-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">wov<span>-mailer</span></div>
+  <div class="nav-links">
+    <a href="#features">機能</a>
+    <a href="#howto">使い方</a>
+    <a href="#requirements">必要環境</a>
+  </div>
+  <a class="nav-cta" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">ダウンロード</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">🎉 オープンソース · 無料</div>
+  <h1>Airtable からそのまま<br><em>メール一斉送信</em></h1>
+  <p>連絡先リストは Airtable で管理したまま、フィルターで対象を絞り込んでHTML メールを Resend 経由で送れるmacOS アプリです。</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
+      ⬇ DMG をダウンロード
+    </a>
+    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank">
+      ★ GitHub で見る
+    </a>
+  </div>
+</section>
+
+<!-- Mockup -->
+<div class="mockup-wrap">
+  <div class="mockup">
+    <div class="mockup-bar">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+    </div>
+    <div class="mockup-body">
+      <div class="mockup-sidebar">
+        <div class="sidebar-item active"><div class="sidebar-icon"></div> Compose</div>
+        <div class="sidebar-item"><div class="sidebar-icon"></div> History</div>
+        <div class="sidebar-item"><div class="sidebar-icon"></div> Terminal</div>
+        <div class="sidebar-item"><div class="sidebar-icon"></div> Settings</div>
+      </div>
+      <div class="mockup-main">
+        <div class="mockup-row">
+          <div>
+            <div class="mockup-label">Base</div>
+            <div class="mockup-field">Newsletter Subscribers</div>
+          </div>
+          <div>
+            <div class="mockup-label">Table</div>
+            <div class="mockup-field">Contacts</div>
+          </div>
+        </div>
+        <div class="mockup-label">Filter</div>
+        <div class="mockup-field" style="color: #a78bfa; margin-bottom: 0.75rem;">coupon_sent = No (未送信)</div>
+        <div class="mockup-label">Subject</div>
+        <div class="mockup-field">{{name}} さんへ、限定クーポンをお届けします</div>
+        <div class="mockup-label">Body</div>
+        <div class="mockup-textarea">こんにちは、{{name}} さん。<br>今回は特別なご案内があります...</div>
+        <div class="mockup-send">✉ 送信する</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">必要な機能がぜんぶ入ってる</h2>
+  <p class="section-sub">シンプルだけど、実際のメール配信業務で使えるように設計されています。</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🗂</div>
+      <h3>Airtable 連携</h3>
+      <p>ベース・テーブルを選んでフィルターをかけるだけ。既存の連絡先管理をそのまま活用できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✏️</div>
+      <h3>差し込み変数</h3>
+      <p>エディタで <code>@</code> を入力するとフィールド候補が表示。<code>{{name}}</code> などをそのまま本文に挿入できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👁</div>
+      <h3>送信前プレビュー</h3>
+      <p>Airtable の実データを使って差し込み結果を確認。受信者リストも送信前に名前・メールアドレスで一覧表示できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>HTMLテンプレート</h3>
+      <p>Gmail・Outlook・Apple Mail など主要クライアントで表示確認済みのテンプレートを5種類内蔵。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>送信履歴</h3>
+      <p>過去の配信履歴を管理。当時の送信先スナップショットを保存するので、Airtable が変わっても確認できます。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡️</div>
+      <h3>Claude Code MCP 連携</h3>
+      <p>内蔵ターミナルから Claude Code と連携可能。メール自動化をさらに拡張できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section id="howto" style="border-top: 1px solid var(--border);">
+  <div class="section-label">How to use</div>
+  <h2 class="section-title">かんたん4ステップで送信完了</h2>
+  <p class="section-sub">難しい設定は不要。初回だけ API キーを登録すれば、あとは選んで送るだけです。</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>API キーを設定</h3>
+        <p>Settings 画面で Airtable の Personal Access Token と Resend の API キーを入力。設定はローカルに保存され、リポジトリには含まれません。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>送信先を絞り込む</h3>
+        <p>Compose 画面でベース・テーブルを選択し、フィルター条件を追加。チェックボックスや選択肢フィールドにも対応しています。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>本文を書いてプレビュー</h3>
+        <p><code>@</code> でフィールドを差し込みながら本文を作成。プレビューで実際の表示を確認し、「View list」で受信者を最終確認。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h3>送信</h3>
+        <p>「送信する」ボタンを押すだけ。送信結果は履歴に自動保存されます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Requirements -->
+<section id="requirements" style="border-top: 1px solid var(--border);">
+  <div class="section-label">Requirements</div>
+  <h2 class="section-title">必要なもの</h2>
+  <p class="section-sub">事前に以下のアカウントと環境をご用意ください。</p>
+
+  <div class="req-grid">
+    <div class="req-card">
+      <div class="req-dot"></div>
+      <div>
+        <h4>macOS</h4>
+        <p>Apple Silicon (arm64) または Intel (x64)</p>
+      </div>
+    </div>
+    <div class="req-card">
+      <div class="req-dot"></div>
+      <div>
+        <h4>Airtable</h4>
+        <p>Personal Access Token が必要</p>
+      </div>
+    </div>
+    <div class="req-card">
+      <div class="req-dot"></div>
+      <div>
+        <h4>Resend</h4>
+        <p>API キーと送信ドメインの認証が必要</p>
+      </div>
+    </div>
+    <div class="req-card">
+      <div class="req-dot"></div>
+      <div>
+        <h4>Node.js v18+</h4>
+        <p>ソースからビルドする場合のみ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>さっそく使ってみよう</h2>
+  <p>オープンソース・無料。DMGをダウンロードするか、ソースからビルドできます。</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
+      ⬇ DMG をダウンロード
+    </a>
+    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank">
+      ★ GitHub で見る
+    </a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>wov-mailer — <a href="https://github.com/whimCrouwel/wov-mailer" target="_blank">GitHub</a> · MIT License</p>
+</footer>
+
+</body>
+</html>
