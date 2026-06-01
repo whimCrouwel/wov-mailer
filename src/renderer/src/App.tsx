@@ -1,3 +1,35 @@
+import { useState } from 'react'
+import { Settings } from './screens/Settings'
+
+type Screen = 'compose' | 'history' | 'settings'
+
 export default function App() {
-  return <div style={{ padding: 24 }}>wov-mailer — loading...</div>
+  const [screen, setScreen] = useState<Screen>('settings')
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', fontFamily: 'sans-serif' }}>
+      <nav style={{ width: 160, background: '#1a1a2e', color: '#fff', padding: 16, flexShrink: 0 }}>
+        <div style={{ fontWeight: 'bold', marginBottom: 24 }}>wov-mailer</div>
+        {(['compose', 'history', 'settings'] as Screen[]).map(s => (
+          <div
+            key={s}
+            onClick={() => setScreen(s)}
+            style={{
+              padding: '8px 0',
+              cursor: 'pointer',
+              color: screen === s ? '#fff' : '#aaa',
+              fontWeight: screen === s ? 'bold' : 'normal',
+            }}
+          >
+            {s.charAt(0).toUpperCase() + s.slice(1)}
+          </div>
+        ))}
+      </nav>
+      <main style={{ flex: 1, overflow: 'auto' }}>
+        {screen === 'settings' && <Settings />}
+        {screen === 'compose' && <div style={{ padding: 24 }}>Compose — coming soon</div>}
+        {screen === 'history' && <div style={{ padding: 24 }}>History — coming soon</div>}
+      </main>
+    </div>
+  )
 }
