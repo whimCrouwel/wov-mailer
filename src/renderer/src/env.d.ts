@@ -1,4 +1,4 @@
-import type { Config, ComposeState } from '../../shared/types'
+import type { Config, ComposeState, HistoryEntry } from '../../shared/types'
 
 declare global {
   interface Window {
@@ -6,6 +6,8 @@ declare global {
       getConfig(): Promise<Config>
       saveConfig(config: Config): Promise<void>
       onMcpStateUpdate(cb: (state: Partial<ComposeState>) => void): void
+      listHistory(): Promise<HistoryEntry[]>
+      appendHistory(entry: HistoryEntry): Promise<void>
     }
   }
 }

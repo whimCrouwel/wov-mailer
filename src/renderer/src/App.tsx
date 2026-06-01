@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { Settings } from './screens/Settings'
+import { History } from './screens/History'
+import type { ComposeState } from '../../shared/types'
 
 type Screen = 'compose' | 'history' | 'settings'
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('settings')
+  const [cloneCompose, setCloneCompose] = useState<ComposeState | null>(null)
 
   return (
     <div style={{ display: 'flex', height: '100vh', fontFamily: 'sans-serif' }}>
@@ -28,7 +31,9 @@ export default function App() {
       <main style={{ flex: 1, overflow: 'auto' }}>
         {screen === 'settings' && <Settings />}
         {screen === 'compose' && <div style={{ padding: 24 }}>Compose — coming soon</div>}
-        {screen === 'history' && <div style={{ padding: 24 }}>History — coming soon</div>}
+        {screen === 'history' && (
+          <History onClone={compose => { setCloneCompose(compose); setScreen('compose') }} />
+        )}
       </main>
     </div>
   )
