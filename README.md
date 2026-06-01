@@ -1,6 +1,6 @@
 # wov-mailer
 
-Airtable の連絡先リストから、Resend 経由でメール一斉送信を行う macOS デスクトップアプリです。[Whim on Vim](https://whim-on-vim.com) ブランド向けに制作されました。
+Airtable の連絡先リストから、Resend 経由でメール一斉送信を行う macOS デスクトップアプリです。
 
 ---
 
