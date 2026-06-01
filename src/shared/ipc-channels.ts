@@ -8,6 +8,8 @@ export const IPC = {
   TEMPLATES_LIST: 'templates:list',
   TEMPLATES_GET: 'templates:get',
   SEND_BROADCAST: 'send:broadcast',
+  AIRTABLE_FETCH_SAMPLE: 'airtable:fetch-sample',
+  AIRTABLE_FIELD_VALUES: 'airtable:field-values',
   HISTORY_LIST: 'history:list',
   HISTORY_APPEND: 'history:append',
   MCP_STATE_UPDATE: 'mcp:state-update',

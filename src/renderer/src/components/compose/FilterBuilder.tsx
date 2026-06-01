@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -5,6 +6,8 @@ import { Plus, X } from 'lucide-react'
 import type { AirtableField, FilterCondition } from '../../../../../shared/types'
 
 interface Props {
+  baseId: string
+  tableId: string
   fields: AirtableField[]
   filters: FilterCondition[]
   onChange: (filters: FilterCondition[]) => void
@@ -23,7 +26,56 @@ function operatorsFor(type: string): { value: FilterCondition['operator']; label
   ]
 }
 
-export function FilterBuilder({ fields, filters, onChange }: Props) {
+function ValueInput({
+  baseId, tableId, fieldName, value, onChange,
+}: { baseId: string; tableId: string; fieldName: string; value: string; onChange: (v: string) => void }) {
+  const [options, setOptions] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (!baseId || !tableId || !fieldName) return
+    setLoading(true)
+    window.api.getFieldValues(baseId, tableId, fieldName)
+      .then(vals => { setOptions(vals); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [baseId, tableId, fieldName])
+
+  if (loading) {
+    return (
+      <Input
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder="Loading…"
+        disabled
+        className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-zinc-500"
+      />
+    )
+  }
+
+  if (options.length > 0) {
+    return (
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
+          <SelectValue placeholder="Select value…" />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
+        </SelectContent>
+      </Select>
+    )
+  }
+
+  return (
+    <Input
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder="value"
+      className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-zinc-500"
+    />
+  )
+}
+
+export function FilterBuilder({ baseId, tableId, fields, filters, onChange }: Props) {
   const nonEmailFields = fields.filter(f => f.type !== 'email')
 
   function addCondition() {
@@ -81,11 +133,12 @@ export function FilterBuilder({ fields, filters, onChange }: Props) {
               </SelectContent>
             </Select>
 
-            <Input
+            <ValueInput
+              baseId={baseId}
+              tableId={tableId}
+              fieldName={filter.field}
               value={filter.value}
-              onChange={e => updateCondition(i, { value: e.target.value })}
-              placeholder="value"
-              className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder:text-zinc-600 focus-visible:ring-zinc-500"
+              onChange={v => updateCondition(i, { value: v })}
             />
 
             <Button

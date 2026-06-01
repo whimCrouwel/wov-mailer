@@ -65,6 +65,48 @@ export function filterRecords(
   )
 }
 
+export async function fetchSampleRecipient(
+  token: string,
+  baseId: string,
+  tableId: string,
+  emailField: string,
+): Promise<Recipient | null> {
+  const base = client(token).base(baseId)
+  let sample: Recipient | null = null
+  await base(tableId).select({ maxRecords: 1 }).eachPage((pageRecords, fetchNextPage) => {
+    for (const r of pageRecords) {
+      const email = r.get(emailField) as string | undefined
+      const mergeData: Record<string, string> = {}
+      for (const [key, value] of Object.entries(r.fields)) {
+        if (typeof value === 'string') mergeData[key] = value
+        else if (typeof value === 'number') mergeData[key] = String(value)
+      }
+      sample = { email: email ?? '', mergeData }
+    }
+    fetchNextPage()
+  })
+  return sample
+}
+
+export async function fetchFieldValues(
+  token: string,
+  baseId: string,
+  tableId: string,
+  fieldName: string,
+): Promise<string[]> {
+  const base = client(token).base(baseId)
+  const seen = new Set<string>()
+  await base(tableId).select({ fields: [fieldName] }).eachPage((pageRecords, fetchNextPage) => {
+    for (const r of pageRecords) {
+      const val = r.get(fieldName)
+      if (typeof val === 'string' && val.trim()) seen.add(val.trim())
+      else if (typeof val === 'number') seen.add(String(val))
+    }
+    fetchNextPage()
+  })
+  return Array.from(seen).sort()
+}
+
 export async function fetchRecipients(
   token: string,
   baseId: string,

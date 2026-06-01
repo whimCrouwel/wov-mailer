@@ -5,7 +5,7 @@ import os from 'os'
 import { IPC } from '../shared/ipc-channels'
 import { getConfig, saveConfig } from './config'
 import { listHistory, appendHistory } from './history'
-import { listBases, listTablesWithEmailFields, fetchRecipients } from './airtable'
+import { listBases, listTablesWithEmailFields, fetchRecipients, fetchSampleRecipient, fetchFieldValues } from './airtable'
 import { listTemplates, getTemplate } from './templates'
 import { sendBroadcast } from './resend'
 import type { Config, HistoryEntry, FilterCondition, ComposeState } from '../shared/types'
@@ -40,6 +40,16 @@ export function registerIpcHandlers(): void {
   ) => {
     const config = await getConfig()
     return fetchRecipients(config.airtableToken, baseId, tableId, emailField, filters)
+  })
+
+  ipcMain.handle(IPC.AIRTABLE_FETCH_SAMPLE, async (_event, baseId: string, tableId: string, emailField: string) => {
+    const config = await getConfig()
+    return fetchSampleRecipient(config.airtableToken, baseId, tableId, emailField)
+  })
+
+  ipcMain.handle(IPC.AIRTABLE_FIELD_VALUES, async (_event, baseId: string, tableId: string, fieldName: string) => {
+    const config = await getConfig()
+    return fetchFieldValues(config.airtableToken, baseId, tableId, fieldName)
   })
 
   ipcMain.handle(IPC.TEMPLATES_LIST, async () => listTemplates())

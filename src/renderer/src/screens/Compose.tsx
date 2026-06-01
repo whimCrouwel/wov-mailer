@@ -12,7 +12,7 @@ import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Separator } from '../components/ui/separator'
 import { Users, Filter, FileText, Mail, Eye } from 'lucide-react'
-import type { ComposeState } from '../../../shared/types'
+import type { ComposeState, Recipient } from '../../../shared/types'
 
 interface Props {
   initial?: ComposeState | null
@@ -22,11 +22,17 @@ interface Props {
 export function Compose({ initial, onSent }: Props) {
   const { compose, setCompose, bases, tables, recipientCount, loading, selectBase, selectTable } = useCompose(initial)
   const [templateHtml, setTemplateHtml] = useState('')
+  const [sampleRecipient, setSampleRecipient] = useState<Recipient | null>(null)
 
   useEffect(() => {
     if (!compose.templateName) return
     window.api.getTemplate(compose.templateName).then(setTemplateHtml)
   }, [compose.templateName])
+
+  useEffect(() => {
+    if (!compose.baseId || !compose.tableId || !compose.emailField) { setSampleRecipient(null); return }
+    window.api.fetchSample(compose.baseId, compose.tableId, compose.emailField).then(setSampleRecipient)
+  }, [compose.baseId, compose.tableId, compose.emailField])
 
   const selectedTable = tables.find(t => t.id === compose.tableId)
 
@@ -84,6 +90,8 @@ export function Compose({ initial, onSent }: Props) {
           <CardContent className="pt-4">
             <p className="text-xs text-zinc-600 mb-3">Conditions are combined with AND logic. Email field is always included.</p>
             <FilterBuilder
+              baseId={compose.baseId}
+              tableId={compose.tableId}
               fields={selectedTable.fields}
               filters={compose.filters}
               onChange={filters => setCompose(c => ({ ...c, filters }))}
@@ -135,6 +143,7 @@ export function Compose({ initial, onSent }: Props) {
           <MarkdownEditor
             value={compose.body}
             onChange={body => setCompose(c => ({ ...c, body }))}
+            fields={selectedTable?.fields}
           />
         </CardContent>
       </Card>
@@ -151,7 +160,7 @@ export function Compose({ initial, onSent }: Props) {
           </CardHeader>
           <Separator className="bg-zinc-800" />
           <CardContent className="pt-4">
-            <EmailPreview body={compose.body} templateHtml={templateHtml} />
+            <EmailPreview body={compose.body} templateHtml={templateHtml} sample={sampleRecipient} />
           </CardContent>
         </Card>
       )}
