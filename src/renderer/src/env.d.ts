@@ -8,6 +8,7 @@ declare global {
       onMcpStateUpdate(cb: (state: Partial<ComposeState>) => void): void
       listHistory(): Promise<HistoryEntry[]>
       appendHistory(entry: HistoryEntry): Promise<void>
+      deleteHistory(id: string): Promise<void>
       listBases(): Promise<AirtableBase[]>
       listTables(baseId: string): Promise<AirtableTable[]>
       previewRecipients(baseId: string, tableId: string, emailField: string, filters: FilterCondition[]): Promise<{ count: number; sample: string[] }>

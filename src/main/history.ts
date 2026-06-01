@@ -26,3 +26,10 @@ export async function appendHistory(entry: HistoryEntry): Promise<void> {
   await fs.mkdir(configDir(), { recursive: true })
   await fs.writeFile(historyPath(), JSON.stringify(updated, null, 2), 'utf-8')
 }
+
+export async function deleteHistory(id: string): Promise<void> {
+  const existing = await listHistory()
+  const updated = existing.filter(e => e.id !== id)
+  await fs.mkdir(configDir(), { recursive: true })
+  await fs.writeFile(historyPath(), JSON.stringify(updated, null, 2), 'utf-8')
+}

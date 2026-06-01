@@ -12,5 +12,6 @@ export const IPC = {
   AIRTABLE_FIELD_VALUES: 'airtable:field-values',
   HISTORY_LIST: 'history:list',
   HISTORY_APPEND: 'history:append',
+  HISTORY_DELETE: 'history:delete',
   MCP_STATE_UPDATE: 'mcp:state-update',
 } as const

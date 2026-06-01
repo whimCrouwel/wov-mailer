@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Card, CardContent } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Copy, Mail, Users, Clock } from 'lucide-react'
+import { Copy, Mail, Users, Clock, Trash2 } from 'lucide-react'
+import { RecipientListDialog } from '../components/compose/RecipientListDialog'
 import type { HistoryEntry, ComposeState } from '../../../shared/types'
 
 interface Props {
@@ -18,10 +19,18 @@ function StatusBadge({ status }: { status: string }) {
 
 export function History({ onClone }: Props) {
   const [entries, setEntries] = useState<HistoryEntry[]>([])
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     window.api.listHistory().then(setEntries)
   }, [])
+
+  async function handleDelete(id: string) {
+    setDeletingId(id)
+    await window.api.deleteHistory(id)
+    setEntries(prev => prev.filter(e => e.id !== id))
+    setDeletingId(null)
+  }
 
   if (entries.length === 0) {
     return (
@@ -64,15 +73,28 @@ export function History({ onClone }: Props) {
                     </span>
                   </div>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onClone(entry.compose)}
-                  className="flex-shrink-0 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 bg-transparent"
-                >
-                  <Copy className="w-3.5 h-3.5 mr-1.5" />
-                  Clone
-                </Button>
+
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <RecipientListDialog compose={entry.compose} recipientCount={entry.recipientCount} />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onClone(entry.compose)}
+                    className="border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 bg-transparent"
+                  >
+                    <Copy className="w-3.5 h-3.5 mr-1.5" />
+                    Clone
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(entry.id)}
+                    disabled={deletingId === entry.id}
+                    className="text-zinc-600 hover:text-red-400 hover:bg-red-400/10 w-8 h-8"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

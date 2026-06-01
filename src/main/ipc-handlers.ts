@@ -4,7 +4,7 @@ import pty from 'node-pty'
 import os from 'os'
 import { IPC } from '../shared/ipc-channels'
 import { getConfig, saveConfig } from './config'
-import { listHistory, appendHistory } from './history'
+import { listHistory, appendHistory, deleteHistory } from './history'
 import { listBases, listTablesWithEmailFields, fetchRecipients, fetchSampleRecipient, fetchFieldValues } from './airtable'
 import { listTemplates, getTemplate } from './templates'
 import { sendBroadcast } from './resend'
@@ -16,6 +16,7 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle(IPC.HISTORY_LIST, async () => listHistory())
   ipcMain.handle(IPC.HISTORY_APPEND, async (_event, entry: HistoryEntry) => appendHistory(entry))
+  ipcMain.handle(IPC.HISTORY_DELETE, async (_event, id: string) => deleteHistory(id))
 
   ipcMain.handle(IPC.AIRTABLE_LIST_BASES, async () => {
     const config = await getConfig()
