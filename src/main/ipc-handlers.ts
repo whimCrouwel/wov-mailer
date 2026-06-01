@@ -1,5 +1,7 @@
 import { ipcMain } from 'electron'
 import { randomUUID } from 'crypto'
+import pty from 'node-pty'
+import os from 'os'
 import { IPC } from '../shared/ipc-channels'
 import { getConfig, saveConfig } from './config'
 import { listHistory, appendHistory } from './history'
@@ -61,5 +63,23 @@ export function registerIpcHandlers(): void {
       compose,
     })
     return result
+  })
+
+  ipcMain.on('terminal:create', (event) => {
+    const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
+    const ptyProcess = pty.spawn(shell, [], {
+      name: 'xterm-color',
+      cols: 80,
+      rows: 24,
+      cwd: os.homedir(),
+      env: process.env as Record<string, string>,
+    })
+
+    ptyProcess.onData(data => event.sender.send('terminal:data', data))
+
+    ipcMain.on('terminal:input', (_e, input: string) => ptyProcess.write(input))
+    ipcMain.on('terminal:resize', (_e, cols: number, rows: number) => ptyProcess.resize(cols, rows))
+
+    event.sender.on('destroyed', () => ptyProcess.kill())
   })
 }
