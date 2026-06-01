@@ -38,8 +38,9 @@ export async function listTablesWithEmailFields(token: string, baseId: string): 
 export function buildFormula(filters: FilterCondition[]): string {
   if (filters.length === 0) return ''
 
+  const checkboxTypes = new Set(['checkbox', 'bool', 'boolean'])
   const parts = filters.map(f => {
-    if (f.fieldType === 'checkbox') {
+    if (checkboxTypes.has((f.fieldType ?? '').toLowerCase())) {
       const boolExpr = f.value === 'true' ? 'TRUE()' : 'FALSE()'
       return `{${f.field}}=${boolExpr}`
     }

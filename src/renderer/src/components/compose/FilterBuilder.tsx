@@ -20,11 +20,14 @@ function operatorsFor(type: string): { value: FilterCondition['operator']; label
     { value: 'lt', label: '<' },
   ]
   if (type === 'singleSelect') return [{ value: 'equals', label: 'equals' }]
+  if (CHECKBOX_TYPES.has(type.toLowerCase())) return [{ value: 'equals', label: 'is' }]
   return [
     { value: 'equals', label: 'equals' },
     { value: 'contains', label: 'contains' },
   ]
 }
+
+const CHECKBOX_TYPES = new Set(['checkbox', 'bool', 'boolean'])
 
 function ValueInput({
   baseId, tableId, fieldName, fieldType, value, onChange,
@@ -32,13 +35,31 @@ function ValueInput({
   const [options, setOptions] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
+  const isCheckbox = CHECKBOX_TYPES.has(fieldType.toLowerCase())
+
   useEffect(() => {
+    if (isCheckbox) return  // handled inline, no fetch needed
     if (!baseId || !tableId || !fieldName) return
     setLoading(true)
     window.api.getFieldValues(baseId, tableId, fieldName, fieldType)
       .then(vals => { setOptions(vals); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [baseId, tableId, fieldName, fieldType])
+  }, [baseId, tableId, fieldName, fieldType, isCheckbox])
+
+  // Checkbox: always show Yes / No inline — no Airtable scan
+  if (isCheckbox) {
+    return (
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
+          <SelectValue placeholder="Select…" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="true">Yes (checked)</SelectItem>
+          <SelectItem value="false">No (unchecked)</SelectItem>
+        </SelectContent>
+      </Select>
+    )
+  }
 
   if (loading) {
     return (
@@ -53,17 +74,13 @@ function ValueInput({
   }
 
   if (options.length > 0) {
-    const label = (o: string) => {
-      if (fieldType === 'checkbox') return o === 'true' ? 'Yes (checked)' : 'No (unchecked)'
-      return o
-    }
     return (
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="flex-1 bg-zinc-800 border-zinc-700 text-zinc-100 focus:ring-zinc-500">
           <SelectValue placeholder="Select value…" />
         </SelectTrigger>
         <SelectContent>
-          {options.map(o => <SelectItem key={o} value={o}>{label(o)}</SelectItem>)}
+          {options.map(o => <SelectItem key={o} value={o}>{o}</SelectItem>)}
         </SelectContent>
       </Select>
     )
