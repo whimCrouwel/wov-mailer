@@ -6,6 +6,41 @@
   <title>wov-mailer — Airtable × Resend でかんたんメール一斉送信</title>
   <meta name="description" content="Airtableの連絡先リストから、Resend経由でHTMLメールを一斉送信できるmacOSデスクトップアプリ。フィルター・差し込み変数・送信履歴管理まで。無料・オープンソース。" />
   <style>
+    .beta-banner {
+      background: rgba(234,179,8,0.08);
+      border-bottom: 1px solid rgba(234,179,8,0.2);
+      padding: 0.5rem 1.5rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ca8a04;
+    }
+    .beta-banner a { color: #ca8a04; text-decoration: underline; }
+    .beta-pill {
+      display: inline-block;
+      background: rgba(234,179,8,0.12);
+      border: 1px solid rgba(234,179,8,0.3);
+      color: #ca8a04;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      vertical-align: middle;
+      margin-left: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .download-grid {
+      display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 0.75rem;
+    }
+    .btn-dl {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #fff;
+      padding: 0.65rem 1.4rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.88rem; transition: background 0.15s;
+    }
+    .btn-dl:hover { background: #6d28d9; text-decoration: none; }
+    .btn-dl-sub { font-size: 0.7rem; font-weight: 400; opacity: 0.8; display: block; }
+  </style>
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -475,6 +510,11 @@
 </head>
 <body>
 
+<!-- Beta banner -->
+<div class="beta-banner">
+  ⚠️ 現在ベータ版です。メインブランチは開発中です。バグ報告は <a href="https://github.com/whimCrouwel/wov-mailer/issues" target="_blank">GitHub Issues</a> へ。
+</div>
+
 <!-- Nav -->
 <nav>
   <div class="nav-logo">wov<span>-mailer</span></div>
@@ -489,14 +529,21 @@
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero-badge">🎉 オープンソース · 無料</div>
+  <div class="hero-badge">🎉 オープンソース · 無料 <span class="beta-pill">BETA</span></div>
   <h1>Airtable からそのまま<br><em>メール一斉送信</em></h1>
   <p>連絡先リストは Airtable で管理したまま、フィルターで対象を絞り込んで HTML メールを Resend 経由で送れる macOS アプリです。</p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
-      ⬇ DMG をダウンロード
+  <div class="download-grid">
+    <a class="btn-dl" href="https://github.com/whimCrouwel/wov-mailer/releases/download/v0.1.0-beta/wov-mailer-0.1.0-arm64.dmg">
+      ⬇ Apple Silicon (M1/M2/M3)
+      <span class="btn-dl-sub">arm64 · macOS</span>
     </a>
-    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank">
+    <a class="btn-dl" href="https://github.com/whimCrouwel/wov-mailer/releases/download/v0.1.0-beta/wov-mailer-0.1.0.dmg">
+      ⬇ Intel Mac
+      <span class="btn-dl-sub">x64 · macOS</span>
+    </a>
+  </div>
+  <div style="margin-top: 1rem;">
+    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--surface2);color:var(--text);padding:0.6rem 1.4rem;border-radius:8px;font-weight:600;font-size:0.88rem;border:1px solid var(--border);">
       ★ GitHub で見る
     </a>
   </div>
@@ -802,12 +849,19 @@
 <!-- CTA -->
 <div class="cta-section">
   <h2>さっそく使ってみよう</h2>
-  <p>オープンソース・無料。DMG をダウンロードするか、ソースからビルドできます。</p>
-  <div class="hero-actions">
-    <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
-      ⬇ DMG をダウンロード
+  <p>オープンソース・無料。ベータ版のフィードバックも歓迎です。</p>
+  <div class="download-grid">
+    <a class="btn-dl" href="https://github.com/whimCrouwel/wov-mailer/releases/download/v0.1.0-beta/wov-mailer-0.1.0-arm64.dmg">
+      ⬇ Apple Silicon (M1/M2/M3)
+      <span class="btn-dl-sub">arm64 · macOS</span>
     </a>
-    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank">
+    <a class="btn-dl" href="https://github.com/whimCrouwel/wov-mailer/releases/download/v0.1.0-beta/wov-mailer-0.1.0.dmg">
+      ⬇ Intel Mac
+      <span class="btn-dl-sub">x64 · macOS</span>
+    </a>
+  </div>
+  <div style="margin-top: 1rem;">
+    <a class="btn-secondary" href="https://github.com/whimCrouwel/wov-mailer" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--surface2);color:var(--text);padding:0.6rem 1.4rem;border-radius:8px;font-weight:600;font-size:0.88rem;border:1px solid var(--border);">
       ★ GitHub で見る
     </a>
   </div>
