@@ -19,6 +19,9 @@
       --accent-light: #a78bfa;
       --accent-dim: rgba(124,58,237,0.15);
       --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --orange: #f97316;
+      --orange-dim: rgba(249,115,22,0.12);
       --radius: 12px;
     }
 
@@ -37,30 +40,22 @@
 
     /* ── Nav ── */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: rgba(15,15,15,0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2rem;
-      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
     }
     .nav-logo { font-weight: 700; font-size: 1rem; letter-spacing: -0.02em; color: var(--text); }
     .nav-logo span { color: var(--accent-light); }
-    .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--muted); }
+    .nav-links { display: flex; gap: 1.5rem; font-size: 0.875rem; }
     .nav-links a { color: var(--muted); }
     .nav-links a:hover { color: var(--text); text-decoration: none; }
     .nav-cta {
-      background: var(--accent);
-      color: #fff;
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-weight: 600;
+      background: var(--accent); color: #fff;
+      padding: 0.4rem 1rem; border-radius: 6px;
+      font-size: 0.875rem; font-weight: 600;
     }
     .nav-cta:hover { background: #6d28d9; text-decoration: none; }
 
@@ -68,162 +63,167 @@
     .hero {
       text-align: center;
       padding: 6rem 1.5rem 5rem;
-      max-width: 760px;
-      margin: 0 auto;
+      max-width: 760px; margin: 0 auto;
     }
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
       background: var(--accent-dim);
       border: 1px solid rgba(124,58,237,0.3);
       color: var(--accent-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.3rem 0.8rem;
-      border-radius: 999px;
+      font-size: 0.8rem; font-weight: 600;
+      padding: 0.3rem 0.8rem; border-radius: 999px;
       margin-bottom: 1.5rem;
     }
     .hero h1 {
       font-size: clamp(2rem, 5vw, 3.25rem);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.25rem;
+      font-weight: 800; line-height: 1.2;
+      letter-spacing: -0.03em; margin-bottom: 1.25rem;
     }
     .hero h1 em { font-style: normal; color: var(--accent-light); }
     .hero p {
-      font-size: 1.125rem;
-      color: var(--muted);
-      max-width: 540px;
-      margin: 0 auto 2.5rem;
+      font-size: 1.125rem; color: var(--muted);
+      max-width: 540px; margin: 0 auto 2.5rem;
     }
     .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--accent);
-      color: #fff;
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      transition: background 0.15s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--accent); color: #fff;
+      padding: 0.75rem 1.75rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.95rem; transition: background 0.15s;
     }
     .btn-primary:hover { background: #6d28d9; text-decoration: none; }
     .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--surface2);
-      color: var(--text);
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      border: 1px solid var(--border);
-      transition: border-color 0.15s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface2); color: var(--text);
+      padding: 0.75rem 1.75rem; border-radius: 8px;
+      font-weight: 600; font-size: 0.95rem;
+      border: 1px solid var(--border); transition: border-color 0.15s;
     }
     .btn-secondary:hover { border-color: #555; text-decoration: none; }
 
-    /* ── App mockup ── */
+    /* ── Mockup ── */
     .mockup-wrap {
-      max-width: 900px;
-      margin: 0 auto 5rem;
-      padding: 0 1.5rem;
+      max-width: 960px; margin: 0 auto 5rem; padding: 0 1.5rem;
     }
     .mockup {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
       box-shadow: 0 32px 80px rgba(0,0,0,0.6);
     }
     .mockup-bar {
-      background: #111;
-      border-bottom: 1px solid var(--border);
+      background: #111; border-bottom: 1px solid var(--border);
       padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
     }
     .dot { width: 12px; height: 12px; border-radius: 50%; }
     .dot-r { background: #ff5f57; }
     .dot-y { background: #febc2e; }
     .dot-g { background: #28c840; }
-    .mockup-body {
+
+    /* Outer: sidebar + right column */
+    .mockup-outer {
       display: grid;
-      grid-template-columns: 180px 1fr;
-      min-height: 380px;
+      grid-template-columns: 160px 1fr;
     }
     .mockup-sidebar {
-      background: #141414;
-      border-right: 1px solid var(--border);
+      background: #141414; border-right: 1px solid var(--border);
       padding: 1rem 0;
     }
     .sidebar-item {
-      padding: 0.5rem 1.25rem;
-      font-size: 0.8rem;
+      padding: 0.5rem 1.25rem; font-size: 0.78rem;
       color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
     }
     .sidebar-item.active {
-      background: var(--accent-dim);
-      color: var(--accent-light);
+      background: var(--accent-dim); color: var(--accent-light);
       border-right: 2px solid var(--accent);
     }
-    .sidebar-icon { width: 14px; height: 14px; border-radius: 3px; background: currentColor; opacity: 0.6; flex-shrink: 0; }
-    .mockup-main { padding: 1.5rem; }
-    .mockup-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .sidebar-icon { width: 13px; height: 13px; border-radius: 3px; background: currentColor; opacity: 0.6; flex-shrink: 0; }
+
+    /* Right column: compose on top, terminal on bottom */
+    .mockup-right { display: flex; flex-direction: column; }
+    .mockup-main { padding: 1.25rem 1.5rem; flex: 1; }
+    .mockup-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .mockup-field {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8rem;
-      color: var(--text);
-      margin-bottom: 0.75rem;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.45rem 0.7rem;
+      font-size: 0.78rem; color: var(--text); margin-bottom: 0.65rem;
     }
-    .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem; }
     .mockup-textarea {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.75rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      height: 90px;
-      line-height: 1.6;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.65rem;
+      font-size: 0.73rem; color: var(--muted);
+      height: 72px; line-height: 1.6;
     }
     .mockup-send {
-      display: inline-block;
-      margin-top: 0.75rem;
-      background: var(--accent);
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.4rem 1rem;
-      border-radius: 6px;
+      display: inline-block; margin-top: 0.65rem;
+      background: var(--accent); color: #fff;
+      font-size: 0.78rem; font-weight: 600;
+      padding: 0.35rem 0.9rem; border-radius: 6px;
     }
+
+    /* Terminal panel */
+    .mockup-terminal {
+      border-top: 1px solid var(--border);
+      background: #0d0d0d;
+    }
+    .terminal-bar {
+      background: #161616; border-bottom: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .terminal-bar-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--border);
+    }
+    .terminal-bar-dot.active { background: var(--green); }
+    .terminal-tab {
+      font-size: 0.72rem; color: var(--muted);
+      padding: 0.15rem 0.5rem; border-radius: 4px;
+    }
+    .terminal-tab.active {
+      background: var(--accent-dim); color: var(--accent-light);
+    }
+    .terminal-mcp-badge {
+      margin-left: auto;
+      font-size: 0.65rem; font-weight: 700;
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+      padding: 0.1rem 0.5rem; border-radius: 999px;
+    }
+    .terminal-body {
+      padding: 0.75rem 1rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      height: 110px;
+      overflow: hidden;
+    }
+    .t-prompt { color: var(--green); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: var(--muted); }
+    .t-tool { color: var(--accent-light); }
+    .t-ok { color: var(--green); }
+    .t-cursor {
+      display: inline-block;
+      width: 7px; height: 13px;
+      background: var(--accent-light);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
 
     /* ── Sections ── */
     section { max-width: 960px; margin: 0 auto; padding: 4rem 1.5rem; }
     .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent-light);
-      margin-bottom: 0.75rem;
+      font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent-light); margin-bottom: 0.75rem;
     }
     .section-title {
       font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem;
     }
     .section-sub { color: var(--muted); max-width: 520px; font-size: 0.95rem; }
 
@@ -231,35 +231,180 @@
     .features-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 3rem;
+      gap: 1rem; margin-top: 3rem;
     }
     .feature-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
       transition: border-color 0.15s;
     }
     .feature-card:hover { border-color: rgba(124,58,237,0.4); }
     .feature-icon {
       width: 40px; height: 40px;
-      background: var(--accent-dim);
-      border-radius: 10px;
+      background: var(--accent-dim); border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 1.25rem;
+      margin-bottom: 1rem; font-size: 1.25rem;
     }
     .feature-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
     .feature-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .feature-card code {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.1rem 0.35rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.78rem; color: var(--accent-light);
+    }
+
+    /* ── MCP Hero Section ── */
+    .mcp-section {
+      border-top: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(124,58,237,0.04) 0%, transparent 100%);
+    }
+    .mcp-inner {
+      max-width: 960px; margin: 0 auto; padding: 5rem 1.5rem;
+    }
+    .mcp-header { margin-bottom: 3rem; }
+    .mcp-label {
+      font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--green); margin-bottom: 0.75rem;
+    }
+    .mcp-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .mcp-title em { font-style: normal; color: var(--accent-light); }
+    .mcp-sub { color: var(--muted); max-width: 560px; font-size: 1rem; line-height: 1.7; }
+
+    .mcp-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .mcp-terminal-demo {
+      background: #0d0d0d;
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(34,197,94,0.06);
+    }
+    .mcp-terminal-bar {
+      background: #141414; border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .mcp-terminal-title {
+      font-size: 0.75rem; color: var(--muted);
+      margin-left: 0.5rem; flex: 1;
+    }
+    .mcp-badge {
+      font-size: 0.65rem; font-weight: 700;
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: var(--green);
+      padding: 0.15rem 0.5rem; border-radius: 999px;
+    }
+    .mcp-terminal-body {
+      padding: 1rem 1.25rem;
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.75rem; line-height: 1.9;
+    }
+    .mcp-points {
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .mcp-point {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .mcp-point-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--green-dim);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .mcp-point h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .mcp-point p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+
+    .mcp-setup-box {
+      margin-top: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+    .mcp-setup-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .mcp-setup-box pre {
+      background: #0d0d0d; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem;
+      font-family: "SF Mono","Fira Code", monospace;
+      font-size: 0.78rem; color: var(--green);
+      overflow-x: auto;
+    }
+
+    /* ── Workflow Section (Tally → Airtable → email) ── */
+    .workflow-section { border-top: 1px solid var(--border); }
+    .workflow-flow {
+      margin-top: 3rem;
+      display: flex; align-items: stretch; gap: 0;
+      flex-wrap: wrap;
+    }
+    .flow-node {
+      flex: 1; min-width: 180px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      position: relative;
+    }
+    .flow-node:not(:last-child)::after {
+      content: "→";
+      position: absolute; right: -18px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem; color: var(--muted);
+      z-index: 1;
+    }
+    .flow-node + .flow-node { margin-left: 24px; }
+    .flow-logo {
+      font-size: 1.75rem; margin-bottom: 0.75rem;
+      display: block;
+    }
+    .flow-node h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .flow-node p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .flow-tag {
+      display: inline-block; margin-top: 0.75rem;
+      font-size: 0.68rem; font-weight: 700;
+      padding: 0.15rem 0.5rem; border-radius: 999px;
+    }
+    .tag-tally { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .tag-airtable { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+    .tag-mailer { background: var(--accent-dim); color: var(--accent-light); border: 1px solid rgba(124,58,237,0.3); }
+    .tag-resend { background: var(--orange-dim); color: #fb923c; border: 1px solid rgba(249,115,22,0.2); }
+
+    .workflow-detail {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .wd-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem;
+    }
+    .wd-card h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .wd-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .wd-card code {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.1rem 0.35rem;
+      font-family: "SF Mono","Fira Code", monospace;
+      font-size: 0.75rem; color: var(--accent-light);
+    }
 
     /* ── How it works ── */
-    .steps { margin-top: 3rem; display: flex; flex-direction: column; gap: 0; }
+    .steps { margin-top: 3rem; display: flex; flex-direction: column; }
     .step {
-      display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 1.25rem;
-      padding: 1.5rem 0;
+      display: grid; grid-template-columns: 48px 1fr;
+      gap: 1.25rem; padding: 1.5rem 0;
       border-bottom: 1px solid var(--border);
     }
     .step:last-child { border-bottom: none; }
@@ -269,53 +414,39 @@
       border: 1px solid rgba(124,58,237,0.3);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 800;
-      font-size: 0.9rem;
-      color: var(--accent-light);
-      flex-shrink: 0;
+      font-weight: 800; font-size: 0.9rem;
+      color: var(--accent-light); flex-shrink: 0;
     }
     .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
     .step p { font-size: 0.875rem; color: var(--muted); }
     .step code {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.15rem 0.4rem;
-      font-family: "SF Mono", "Fira Code", monospace;
-      font-size: 0.8rem;
-      color: var(--accent-light);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.15rem 0.4rem;
+      font-family: "SF Mono","Fira Code", monospace;
+      font-size: 0.8rem; color: var(--accent-light);
     }
 
     /* ── Requirements ── */
     .req-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
+      gap: 1rem; margin-top: 2rem;
     }
     .req-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem;
+      display: flex; align-items: flex-start; gap: 0.75rem;
     }
     .req-dot {
-      width: 8px; height: 8px;
-      background: var(--green);
-      border-radius: 50%;
-      margin-top: 0.45rem;
-      flex-shrink: 0;
+      width: 8px; height: 8px; background: var(--green);
+      border-radius: 50%; margin-top: 0.45rem; flex-shrink: 0;
     }
     .req-card h4 { font-size: 0.875rem; font-weight: 700; margin-bottom: 0.2rem; }
     .req-card p { font-size: 0.8rem; color: var(--muted); }
 
     /* ── CTA ── */
     .cta-section {
-      text-align: center;
-      padding: 5rem 1.5rem;
+      text-align: center; padding: 5rem 1.5rem;
       border-top: 1px solid var(--border);
     }
     .cta-section h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
@@ -324,19 +455,21 @@
     /* ── Footer ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--muted);
+      padding: 2rem 1.5rem; text-align: center;
+      font-size: 0.8rem; color: var(--muted);
     }
     footer a { color: var(--muted); }
     footer a:hover { color: var(--text); }
 
-    @media (max-width: 600px) {
-      .mockup-body { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      .mockup-outer { grid-template-columns: 1fr; }
       .mockup-sidebar { display: none; }
-      .nav-links { display: none; }
       .mockup-row { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .mcp-layout { grid-template-columns: 1fr; }
+      .flow-node:not(:last-child)::after { display: none; }
+      .flow-node + .flow-node { margin-left: 0; margin-top: 0.75rem; }
+      .workflow-flow { flex-direction: column; }
     }
   </style>
 </head>
@@ -347,8 +480,9 @@
   <div class="nav-logo">wov<span>-mailer</span></div>
   <div class="nav-links">
     <a href="#features">機能</a>
+    <a href="#mcp">Claude MCP</a>
+    <a href="#workflow">活用例</a>
     <a href="#howto">使い方</a>
-    <a href="#requirements">必要環境</a>
   </div>
   <a class="nav-cta" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">ダウンロード</a>
 </nav>
@@ -357,7 +491,7 @@
 <section class="hero">
   <div class="hero-badge">🎉 オープンソース · 無料</div>
   <h1>Airtable からそのまま<br><em>メール一斉送信</em></h1>
-  <p>連絡先リストは Airtable で管理したまま、フィルターで対象を絞り込んでHTML メールを Resend 経由で送れるmacOS アプリです。</p>
+  <p>連絡先リストは Airtable で管理したまま、フィルターで対象を絞り込んで HTML メールを Resend 経由で送れる macOS アプリです。</p>
   <div class="hero-actions">
     <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
       ⬇ DMG をダウンロード
@@ -368,7 +502,7 @@
   </div>
 </section>
 
-<!-- Mockup -->
+<!-- App Mockup — compose + terminal -->
 <div class="mockup-wrap">
   <div class="mockup">
     <div class="mockup-bar">
@@ -376,31 +510,51 @@
       <div class="dot dot-y"></div>
       <div class="dot dot-g"></div>
     </div>
-    <div class="mockup-body">
+    <div class="mockup-outer">
+      <!-- Sidebar -->
       <div class="mockup-sidebar">
         <div class="sidebar-item active"><div class="sidebar-icon"></div> Compose</div>
         <div class="sidebar-item"><div class="sidebar-icon"></div> History</div>
         <div class="sidebar-item"><div class="sidebar-icon"></div> Terminal</div>
         <div class="sidebar-item"><div class="sidebar-icon"></div> Settings</div>
       </div>
-      <div class="mockup-main">
-        <div class="mockup-row">
-          <div>
-            <div class="mockup-label">Base</div>
-            <div class="mockup-field">Newsletter Subscribers</div>
+      <!-- Right: compose top, terminal bottom -->
+      <div class="mockup-right">
+        <div class="mockup-main">
+          <div class="mockup-row">
+            <div>
+              <div class="mockup-label">Base</div>
+              <div class="mockup-field">Newsletter Subscribers</div>
+            </div>
+            <div>
+              <div class="mockup-label">Table</div>
+              <div class="mockup-field">Contacts</div>
+            </div>
           </div>
-          <div>
-            <div class="mockup-label">Table</div>
-            <div class="mockup-field">Contacts</div>
+          <div class="mockup-label">Filter</div>
+          <div class="mockup-field" style="color: #a78bfa; margin-bottom: 0.65rem;">coupon_sent = No (未送信)</div>
+          <div class="mockup-label">Subject</div>
+          <div class="mockup-field">{{name}} さんへ、限定クーポンをお届けします</div>
+          <div class="mockup-label">Body</div>
+          <div class="mockup-textarea">こんにちは、{{name}} さん。<br>今回は特別なご案内があります…</div>
+          <div class="mockup-send">✉ 送信する</div>
+        </div>
+
+        <!-- Terminal panel -->
+        <div class="mockup-terminal">
+          <div class="terminal-bar">
+            <div class="terminal-bar-dot active"></div>
+            <div class="terminal-tab active">Terminal</div>
+            <div class="terminal-mcp-badge">● MCP connected</div>
+          </div>
+          <div class="terminal-body">
+            <div><span class="t-prompt">claude&gt;</span> <span class="t-cmd">Airtableのcontactsテーブルで未送信の人を選んでメールを準備して</span></div>
+            <div><span class="t-tool">⚡ select_base</span> <span class="t-out">→ Newsletter Subscribers</span></div>
+            <div><span class="t-tool">⚡ add_filter</span> <span class="t-out">→ coupon_sent = false</span></div>
+            <div><span class="t-tool">⚡ preview_recipients</span> <span class="t-out">→ 42 recipients found</span></div>
+            <div><span class="t-ok">✓ Compose 画面を更新しました。内容を確認して「送信する」を押してください。</span> <span class="t-cursor"></span></div>
           </div>
         </div>
-        <div class="mockup-label">Filter</div>
-        <div class="mockup-field" style="color: #a78bfa; margin-bottom: 0.75rem;">coupon_sent = No (未送信)</div>
-        <div class="mockup-label">Subject</div>
-        <div class="mockup-field">{{name}} さんへ、限定クーポンをお届けします</div>
-        <div class="mockup-label">Body</div>
-        <div class="mockup-textarea">こんにちは、{{name}} さん。<br>今回は特別なご案内があります...</div>
-        <div class="mockup-send">✉ 送信する</div>
       </div>
     </div>
   </div>
@@ -426,11 +580,11 @@
     <div class="feature-card">
       <div class="feature-icon">👁</div>
       <h3>送信前プレビュー</h3>
-      <p>Airtable の実データを使って差し込み結果を確認。受信者リストも送信前に名前・メールアドレスで一覧表示できます。</p>
+      <p>Airtable の実データで差し込み結果を確認。受信者リストも名前・メールアドレスで一覧表示できます。</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🎨</div>
-      <h3>HTMLテンプレート</h3>
+      <h3>HTML テンプレート</h3>
       <p>Gmail・Outlook・Apple Mail など主要クライアントで表示確認済みのテンプレートを5種類内蔵。</p>
     </div>
     <div class="feature-card">
@@ -439,9 +593,132 @@
       <p>過去の配信履歴を管理。当時の送信先スナップショットを保存するので、Airtable が変わっても確認できます。</p>
     </div>
     <div class="feature-card">
-      <div class="feature-icon">⚡️</div>
-      <h3>Claude Code MCP 連携</h3>
-      <p>内蔵ターミナルから Claude Code と連携可能。メール自動化をさらに拡張できます。</p>
+      <div class="feature-icon">🔁</div>
+      <h3>Clone & 再送</h3>
+      <p>過去のブロードキャストをワンクリックで複製。件名や本文を調整してすぐ再送できます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- MCP Section -->
+<div class="mcp-section" id="mcp">
+  <div class="mcp-inner">
+    <div class="mcp-header">
+      <div class="mcp-label">● Claude Code MCP Integration</div>
+      <h2 class="mcp-title">Claude が<em>アプリを直接操作</em>する</h2>
+      <p class="mcp-sub">wov-mailer には MCP（Model Context Protocol）サーバーが内蔵されています。Claude Code をターミナルで使うと、自然言語の指示だけで Compose 画面のフィルター・テンプレート・件名・本文をすべて設定できます。送信は必ず人間が確認してから。</p>
+    </div>
+
+    <div class="mcp-layout">
+      <!-- Terminal demo -->
+      <div class="mcp-terminal-demo">
+        <div class="mcp-terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="mcp-terminal-title">wov-mailer — Terminal</div>
+          <div class="mcp-badge">MCP connected</div>
+        </div>
+        <div class="mcp-terminal-body">
+          <div><span class="t-prompt">you&gt;</span> <span class="t-cmd">先月登録したユーザーに、ウェルカムメールを準備して</span></div>
+          <br>
+          <div><span class="t-tool">⚡ select_base</span>  <span class="t-out">Members</span></div>
+          <div><span class="t-tool">⚡ select_table</span> <span class="t-out">Signups</span></div>
+          <div><span class="t-tool">⚡ add_filter</span>   <span class="t-out">joined_at &gt; 2026-05-01</span></div>
+          <div><span class="t-tool">⚡ add_filter</span>   <span class="t-out">welcome_sent = false</span></div>
+          <div><span class="t-tool">⚡ select_template</span> <span class="t-out">minimal</span></div>
+          <div><span class="t-tool">⚡ set_subject</span>  <span class="t-out">{{name}} さん、ようこそ！</span></div>
+          <div><span class="t-tool">⚡ preview_recipients</span> <span class="t-out">→ 17 件</span></div>
+          <br>
+          <div><span class="t-ok">✓ 準備完了。Compose 画面を確認して送信してください。</span></div>
+          <div><span class="t-prompt">you&gt;</span> <span class="t-cursor"></span></div>
+        </div>
+      </div>
+
+      <!-- Points -->
+      <div class="mcp-points">
+        <div class="mcp-point">
+          <div class="mcp-point-icon">🧠</div>
+          <div>
+            <h4>自然言語で設定できる</h4>
+            <p>フィルターやテンプレートの選択を日本語で指示するだけ。Claude が 10 種類の MCP ツールを使って Compose 画面をリアルタイムに更新します。</p>
+          </div>
+        </div>
+        <div class="mcp-point">
+          <div class="mcp-point-icon">🔒</div>
+          <div>
+            <h4>送信は必ず人間が確認</h4>
+            <p>MCP に「送信する」ツールは存在しません。Claude はメールを準備するだけで、実際の送信ボタンを押すのは常にあなた自身です。</p>
+          </div>
+        </div>
+        <div class="mcp-point">
+          <div class="mcp-point-icon">⚡️</div>
+          <div>
+            <h4>アプリを開いたまま会話できる</h4>
+            <p>内蔵ターミナルから直接 Claude Code を操作。ブラウザに切り替える必要なし。設定変更が画面に即座に反映されます。</p>
+          </div>
+        </div>
+
+        <div class="mcp-setup-box">
+          <p>初回のみ一度だけ登録が必要です：</p>
+          <pre>claude mcp add wov-mailer \
+  --transport http http://127.0.0.1:3741 \
+  --scope user</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Workflow Section: Tally → Airtable → wov-mailer -->
+<section id="workflow" class="workflow-section">
+  <div class="section-label">Use Case</div>
+  <h2 class="section-title">Tally フォーム → Airtable → メール配信</h2>
+  <p class="section-sub">問い合わせや登録フォームから、自動でリストに追加して配信まで。配信停止リンク付きで、丁寧なメール体験を作れます。</p>
+
+  <div class="workflow-flow">
+    <div class="flow-node">
+      <span class="flow-logo">📝</span>
+      <h3>Tally フォーム</h3>
+      <p>問い合わせ・登録フォームを作成。回答が自動で Airtable に蓄積されます。</p>
+      <span class="flow-tag tag-tally">tally.so</span>
+    </div>
+    <div class="flow-node">
+      <span class="flow-logo">🗂</span>
+      <h3>Airtable</h3>
+      <p>連絡先を一元管理。<code>unsubscribed</code> チェックボックスで配信停止フラグを管理できます。</p>
+      <span class="flow-tag tag-airtable">airtable.com</span>
+    </div>
+    <div class="flow-node">
+      <span class="flow-logo">✉️</span>
+      <h3>wov-mailer</h3>
+      <p><code>unsubscribed = false</code> でフィルターして対象者だけに送信。配信停止リンクをメール本文に含めます。</p>
+      <span class="flow-tag tag-mailer">wov-mailer</span>
+    </div>
+    <div class="flow-node">
+      <span class="flow-logo">🚀</span>
+      <h3>Resend</h3>
+      <p>高い到達率でメール配信。送信結果は履歴に保存され、いつでも確認できます。</p>
+      <span class="flow-tag tag-resend">resend.com</span>
+    </div>
+  </div>
+
+  <div class="workflow-detail">
+    <div class="wd-card">
+      <h4>📝 フォーム → Airtable の連携</h4>
+      <p>Tally の「Airtable integration」を使えば、フォームの回答が送信されるたびに Airtable のレコードが自動追加されます。Make / Zapier 経由でも連携可能。</p>
+    </div>
+    <div class="wd-card">
+      <h4>🚫 配信停止の仕組み</h4>
+      <p>メール本文に Tally フォームの URL（例：配信停止フォーム）を含めます。回答があったら Airtable の <code>unsubscribed</code> を <code>true</code> に更新。次回配信時はフィルターで除外されます。</p>
+    </div>
+    <div class="wd-card">
+      <h4>⚡ Claude で一括準備</h4>
+      <p>内蔵ターミナルで「先週登録した人にウェルカムメールを送って」と一言伝えるだけ。Claude が Airtable の条件を設定して Compose 画面を準備します。あとは送信するだけ。</p>
+    </div>
+    <div class="wd-card">
+      <h4>🔁 定期配信のフロー例</h4>
+      <p>月次ニュースレターなら：① Tally で新規登録受付 → ② Airtable でリスト管理 → ③ wov-mailer でフィルター送信 → ④ 配信停止はフラグで管理。すべてノーコードで完結。</p>
     </div>
   </div>
 </section>
@@ -525,7 +802,7 @@
 <!-- CTA -->
 <div class="cta-section">
   <h2>さっそく使ってみよう</h2>
-  <p>オープンソース・無料。DMGをダウンロードするか、ソースからビルドできます。</p>
+  <p>オープンソース・無料。DMG をダウンロードするか、ソースからビルドできます。</p>
   <div class="hero-actions">
     <a class="btn-primary" href="https://github.com/whimCrouwel/wov-mailer/releases" target="_blank">
       ⬇ DMG をダウンロード
