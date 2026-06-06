@@ -5,7 +5,18 @@
       "Bash(ls:*)",
       "Bash(npm ls:*)",
       "Bash(node:*)",
-      "Bash(xargs -I{} ps -p {} -o lstart=,command=)"
+      "Bash(xargs -I{} ps -p {} -o lstart=,command=)",
+      "Bash(python3 /tmp/make_icon.py)",
+      "Bash(cp icon_32x32.png icon_16x16@2x.png)",
+      "Bash(cp icon_64x64.png icon_32x32@2x.png)",
+      "Bash(cp icon_256x256.png icon_128x128@2x.png)",
+      "Bash(cp icon_512x512.png icon_256x256@2x.png)",
+      "Bash(cp icon_1024x1024.png icon_512x512@2x.png)",
+      "Bash(rm -rf \"/Applications/wov-mailer.app\")",
+      "Bash(hdiutil attach:*)",
+      "Bash(cp -R \"/Volumes/wov-mailer 0.1.0/wov-mailer.app\" /Applications/)",
+      "Bash(hdiutil detach:*)",
+      "Read(//Applications/**)"
     ]
   }
 }
