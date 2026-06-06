@@ -105,7 +105,7 @@ npm run dist
 
 | ツール | 説明 |
 |--------|------|
-| `setup_recipients(baseId, tableId, filters?)` | ベース・テーブル・フィルターを1回のコールで設定。送信先件数とサンプルを返す |
+| `setup_recipients(baseId, tableId, filters?)` | ベース・テーブル・フィルターを1回のコールで設定。送信先件数とサンプルを返す。operator: `equals` / `not_equals` / `contains` / `gt` / `lt` |
 | `setup_content(templateName, subject, body)` | テンプレート・件名・本文を1回のコールで設定。`setup_recipients` と並行実行可能 |
 
 ### 個別ツール
@@ -116,7 +116,7 @@ npm run dist
 | `select_base` | ベースを選択 |
 | `list_tables` | 選択中のベースのテーブル一覧を取得（メールフィールドがあるもののみ） |
 | `select_table` | テーブルを選択 |
-| `add_filter` | 送信対象を絞り込むフィルターを追加 |
+| `add_filter` | 送信対象を絞り込むフィルターを追加（operator: `equals` / `not_equals` / `contains` / `gt` / `lt`） |
 | `clear_filters` | フィルターをすべてクリア |
 | `preview_recipients` | 現在の設定での送信先件数とサンプルを確認 |
 | `set_subject` | 件名を設定 |
