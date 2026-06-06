@@ -33,20 +33,24 @@ export async function sendBroadcast(
 
   for (const recipient of recipients) {
     try {
-      const unsubscribeUrl = buildUnsubscribeUrl(recipient.email)
+      const unsubscribeUrl = compose.isMarketing ? buildUnsubscribeUrl(recipient.email) : ''
       const html = await renderTemplate(compose.templateName, applyMergeTags(bodyHtml, recipient.mergeData), unsubscribeUrl)
       const subject = applyMergeTags(compose.subject, recipient.mergeData)
 
-      const { data, error } = await resend.emails.send({
+      const emailPayload: Parameters<typeof resend.emails.send>[0] = {
         from: `${senderName} <${senderEmail}>`,
         to: recipient.email,
         subject,
         html,
-        headers: {
+      }
+      if (compose.isMarketing) {
+        emailPayload.headers = {
           'List-Unsubscribe': `<${unsubscribeUrl}>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
-        },
-      })
+        }
+      }
+
+      const { data, error } = await resend.emails.send(emailPayload)
       if (error) {
         throw new Error(`Resend error: ${JSON.stringify(error)}`)
       }

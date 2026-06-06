@@ -42,7 +42,7 @@ app.whenReady().then(() => {
 
   const mainWindow = createWindow()
   registerIpcHandlers()
-  startMcpServer(mainWindow)
+  startMcpServer(mainWindow).catch(console.error)
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

@@ -13,5 +13,8 @@ export const IPC = {
   HISTORY_LIST: 'history:list',
   HISTORY_APPEND: 'history:append',
   HISTORY_DELETE: 'history:delete',
+  DRAFT_LIST: 'draft:list',
+  DRAFT_SAVE: 'draft:save',
+  DRAFT_DELETE: 'draft:delete',
   MCP_STATE_UPDATE: 'mcp:state-update',
 } as const

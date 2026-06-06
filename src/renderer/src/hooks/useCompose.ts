@@ -4,7 +4,7 @@ import type { ComposeState, AirtableBase, AirtableTable } from '../../../shared/
 const emptyCompose: ComposeState = {
   baseId: '', baseLabel: '', tableId: '', tableLabel: '',
   emailField: '', filters: [], templateName: '',
-  subject: '', body: '',
+  subject: '', body: '', isMarketing: false,
 }
 
 export function useCompose(initial?: ComposeState | null) {

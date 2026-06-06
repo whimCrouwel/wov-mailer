@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(ls:*)",
+      "Bash(npm ls:*)",
+      "Bash(node:*)",
+      "Bash(xargs -I{} ps -p {} -o lstart=,command=)"
+    ]
+  }
+}

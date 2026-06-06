@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { IPC } from '../shared/ipc-channels'
-import type { Config, ComposeState, HistoryEntry, AirtableBase, AirtableTable, FilterCondition } from '../shared/types'
+import type { Config, ComposeState, HistoryEntry, DraftEntry, AirtableBase, AirtableTable, FilterCondition } from '../shared/types'
 
 contextBridge.exposeInMainWorld('api', {
   getConfig: (): Promise<Config> => ipcRenderer.invoke(IPC.CONFIG_GET),
@@ -11,6 +11,9 @@ contextBridge.exposeInMainWorld('api', {
   listHistory: (): Promise<HistoryEntry[]> => ipcRenderer.invoke(IPC.HISTORY_LIST),
   appendHistory: (entry: HistoryEntry): Promise<void> => ipcRenderer.invoke(IPC.HISTORY_APPEND, entry),
   deleteHistory: (id: string): Promise<void> => ipcRenderer.invoke(IPC.HISTORY_DELETE, id),
+  listDrafts: (): Promise<DraftEntry[]> => ipcRenderer.invoke(IPC.DRAFT_LIST),
+  saveDraft: (entry: DraftEntry): Promise<void> => ipcRenderer.invoke(IPC.DRAFT_SAVE, entry),
+  deleteDraft: (id: string): Promise<void> => ipcRenderer.invoke(IPC.DRAFT_DELETE, id),
   listBases: (): Promise<AirtableBase[]> => ipcRenderer.invoke(IPC.AIRTABLE_LIST_BASES),
   listTables: (baseId: string): Promise<AirtableTable[]> => ipcRenderer.invoke(IPC.AIRTABLE_LIST_TABLES, baseId),
   previewRecipients: (baseId: string, tableId: string, emailField: string, filters: FilterCondition[]) =>

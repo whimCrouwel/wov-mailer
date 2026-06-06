@@ -89,7 +89,7 @@ Templates are copied to `~/.config/wov-mailer/templates/` on first launch. Exist
 Register once with: `claude mcp add wov-mailer --transport http http://127.0.0.1:3741 --scope user`
 
 Tools: `list_bases`, `select_base`, `select_table`, `add_filter`, `clear_filters`,
-`preview_recipients`, `set_subject`, `set_body`, `list_templates`, `select_template`
+`preview_recipients`, `set_subject`, `set_body`, `list_templates`, `select_template`, `set_marketing`
 
 All tool calls live-update the Compose screen. No `send` tool — sending is always manual.
 

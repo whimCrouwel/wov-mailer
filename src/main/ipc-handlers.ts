@@ -5,10 +5,11 @@ import os from 'os'
 import { IPC } from '../shared/ipc-channels'
 import { getConfig, saveConfig } from './config'
 import { listHistory, appendHistory, deleteHistory } from './history'
+import { listDrafts, saveDraft, deleteDraft } from './drafts'
 import { listBases, listTablesWithEmailFields, fetchRecipients, fetchSampleRecipient, fetchFieldValues } from './airtable'
 import { listTemplates, getTemplate } from './templates'
 import { sendBroadcast } from './resend'
-import type { Config, HistoryEntry, FilterCondition, ComposeState } from '../shared/types'
+import type { Config, HistoryEntry, DraftEntry, FilterCondition, ComposeState } from '../shared/types'
 
 export function registerIpcHandlers(): void {
   ipcMain.handle(IPC.CONFIG_GET, async () => getConfig())
@@ -17,6 +18,10 @@ export function registerIpcHandlers(): void {
   ipcMain.handle(IPC.HISTORY_LIST, async () => listHistory())
   ipcMain.handle(IPC.HISTORY_APPEND, async (_event, entry: HistoryEntry) => appendHistory(entry))
   ipcMain.handle(IPC.HISTORY_DELETE, async (_event, id: string) => deleteHistory(id))
+
+  ipcMain.handle(IPC.DRAFT_LIST, async () => listDrafts())
+  ipcMain.handle(IPC.DRAFT_SAVE, async (_event, entry: DraftEntry) => saveDraft(entry))
+  ipcMain.handle(IPC.DRAFT_DELETE, async (_event, id: string) => deleteDraft(id))
 
   ipcMain.handle(IPC.AIRTABLE_LIST_BASES, async () => {
     const config = await getConfig()

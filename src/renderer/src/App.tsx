@@ -1,24 +1,31 @@
 import { useState } from 'react'
 import { Settings } from './screens/Settings'
 import { History } from './screens/History'
+import { Drafts } from './screens/Drafts'
 import { Compose } from './screens/Compose'
 import { Terminal } from './components/Terminal'
 import { cn } from './lib/utils'
-import { Mail, History as HistoryIcon, Settings as SettingsIcon, TerminalSquare, ChevronUp, ChevronDown } from 'lucide-react'
+import { Mail, History as HistoryIcon, Settings as SettingsIcon, TerminalSquare, ChevronUp, ChevronDown, PenLine } from 'lucide-react'
 import type { ComposeState } from '../../shared/types'
 
-type Screen = 'compose' | 'history' | 'settings'
+type Screen = 'compose' | 'drafts' | 'history' | 'settings'
 
 const NAV_ITEMS: { id: Screen; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'compose', label: 'Compose', icon: Mail },
+  { id: 'drafts', label: 'Drafts', icon: PenLine },
   { id: 'history', label: 'History', icon: HistoryIcon },
   { id: 'settings', label: 'Settings', icon: SettingsIcon },
 ]
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('compose')
-  const [cloneCompose, setCloneCompose] = useState<ComposeState | null>(null)
+  const [loadCompose, setLoadCompose] = useState<ComposeState | null>(null)
   const [terminalOpen, setTerminalOpen] = useState(false)
+
+  function openInCompose(compose: ComposeState) {
+    setLoadCompose(compose)
+    setScreen('compose')
+  }
 
   return (
     <div className="flex flex-col h-screen bg-zinc-950 text-zinc-100 overflow-hidden">
@@ -62,27 +69,33 @@ export default function App() {
           </div>
         </nav>
 
-        {/* Main content */}
-        <main className="flex-1 overflow-auto bg-zinc-950">
-          {screen === 'settings' && <Settings />}
-          {screen === 'compose' && (
-            <Compose
-              initial={cloneCompose}
-              onSent={() => { setCloneCompose(null); setScreen('history') }}
-            />
-          )}
-          {screen === 'history' && (
-            <History onClone={compose => { setCloneCompose(compose); setScreen('compose') }} />
-          )}
-        </main>
-      </div>
+        {/* Right column: content + terminal */}
+        <div className="flex flex-col flex-1 overflow-hidden">
+          <main className="flex-1 overflow-auto bg-zinc-950">
+            {screen === 'settings' && <Settings />}
+            {screen === 'compose' && (
+              <Compose
+                initial={loadCompose}
+                onSent={() => { setLoadCompose(null); setScreen('history') }}
+              />
+            )}
+            {screen === 'drafts' && (
+              <Drafts onEdit={openInCompose} />
+            )}
+            {screen === 'history' && (
+              <History onClone={openInCompose} />
+            )}
+          </main>
 
-      {/* Terminal panel */}
-      {terminalOpen && (
-        <div className="h-72 border-t border-zinc-700 bg-zinc-950 flex-shrink-0">
-          <Terminal />
+          {/* Terminal panel — right pane only; kept mounted to preserve pty session */}
+          <div
+            className="border-t border-zinc-700 bg-zinc-950 flex-shrink-0 overflow-hidden transition-all duration-200"
+            style={{ height: terminalOpen ? '18rem' : '0', visibility: terminalOpen ? 'visible' : 'hidden' }}
+          >
+            <Terminal />
+          </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

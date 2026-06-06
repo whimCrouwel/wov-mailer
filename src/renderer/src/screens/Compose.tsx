@@ -11,7 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Separator } from '../components/ui/separator'
-import { Users, Filter, FileText, Mail, Eye } from 'lucide-react'
+import { Users, Filter, FileText, Mail, Eye, Megaphone, Save, CheckCheck } from 'lucide-react'
+import { Button } from '../components/ui/button'
 import { RecipientListDialog } from '../components/compose/RecipientListDialog'
 import type { ComposeState, Recipient } from '../../../shared/types'
 
@@ -24,6 +25,23 @@ export function Compose({ initial, onSent }: Props) {
   const { compose, setCompose, bases, tables, recipientCount, loading, selectBase, selectTable } = useCompose(initial)
   const [templateHtml, setTemplateHtml] = useState('')
   const [sampleRecipient, setSampleRecipient] = useState<Recipient | null>(null)
+  const [draftSaved, setDraftSaved] = useState(false)
+
+  async function handleSaveDraft() {
+    const id = compose.draftId ?? crypto.randomUUID()
+    const entry = { id, savedAt: new Date().toISOString(), compose: { ...compose, draftId: id } }
+    await window.api.saveDraft(entry)
+    setCompose(c => ({ ...c, draftId: id }))
+    setDraftSaved(true)
+    setTimeout(() => setDraftSaved(false), 2000)
+  }
+
+  async function handleSent() {
+    if (compose.draftId) {
+      await window.api.deleteDraft(compose.draftId).catch(() => {})
+    }
+    onSent()
+  }
 
   useEffect(() => {
     if (!compose.templateName) return
@@ -42,6 +60,35 @@ export function Compose({ initial, onSent }: Props) {
       <div className="mb-2">
         <h1 className="text-xl font-semibold text-zinc-100">New Broadcast</h1>
         <p className="text-sm text-zinc-500 mt-1">Compose and send an email broadcast to your Airtable contacts.</p>
+      </div>
+
+      {/* Marketing toggle */}
+      <div className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Megaphone className="w-4 h-4 text-zinc-400" />
+          <div>
+            <p className="text-sm font-medium text-zinc-200">Marketing email</p>
+            <p className="text-xs text-zinc-500">
+              {compose.isMarketing
+                ? '配信停止リンクを含む・Resend の配信停止フィルターを適用'
+                : 'トランザクション送信・配信停止リンクなし'}
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setCompose(c => ({ ...c, isMarketing: !c.isMarketing }))}
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 ${
+            compose.isMarketing ? 'bg-violet-600' : 'bg-zinc-700'
+          }`}
+          role="switch"
+          aria-checked={compose.isMarketing}
+        >
+          <span
+            className={`pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform ${
+              compose.isMarketing ? 'translate-x-5' : 'translate-x-0'
+            }`}
+          />
+        </button>
       </div>
 
       {/* Step 1: Source */}
@@ -162,14 +209,25 @@ export function Compose({ initial, onSent }: Props) {
           </CardHeader>
           <Separator className="bg-zinc-800" />
           <CardContent className="pt-4">
-            <EmailPreview body={compose.body} templateHtml={templateHtml} sample={sampleRecipient} />
+            <EmailPreview body={compose.body} templateHtml={templateHtml} sample={sampleRecipient} isMarketing={compose.isMarketing} />
           </CardContent>
         </Card>
       )}
 
-      {/* Send */}
-      <div className="pb-4">
-        <SendButton compose={compose} recipientCount={recipientCount} onSent={onSent} />
+      {/* Save Draft + Send */}
+      <div className="pb-4 space-y-3">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleSaveDraft}
+          className="border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 bg-transparent"
+        >
+          {draftSaved
+            ? <><CheckCheck className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />Saved</>
+            : <><Save className="w-3.5 h-3.5 mr-1.5" />{compose.draftId ? 'Update Draft' : 'Save Draft'}</>
+          }
+        </Button>
+        <SendButton compose={compose} recipientCount={recipientCount} onSent={handleSent} />
       </div>
     </div>
   )

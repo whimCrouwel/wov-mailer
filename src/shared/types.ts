@@ -22,6 +22,14 @@ export interface ComposeState {
   templateName: string
   subject: string
   body: string
+  isMarketing: boolean
+  draftId?: string
+}
+
+export interface DraftEntry {
+  id: string
+  savedAt: string
+  compose: ComposeState
 }
 
 export interface HistoryEntry {

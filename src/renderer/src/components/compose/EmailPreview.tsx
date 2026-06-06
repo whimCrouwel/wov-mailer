@@ -6,26 +6,31 @@ interface Props {
   body: string
   templateHtml: string
   sample: Recipient | null
+  isMarketing: boolean
 }
 
 function applyMergeTags(text: string, data: Record<string, string>): string {
   return text.replace(/\{\{(\w+)\}\}/g, (_, key) => data[key] ?? `{{${key}}}`)
 }
 
-export function EmailPreview({ body, templateHtml, sample }: Props) {
+export function EmailPreview({ body, templateHtml, sample, isMarketing }: Props) {
   const [html, setHtml] = useState('')
 
   useEffect(() => {
     async function render() {
       const resolvedBody = sample ? applyMergeTags(body, sample.mergeData) : body
       const bodyHtml = await marked(resolvedBody)
-      const full = templateHtml
-        .replace('{{BODY}}', bodyHtml)
-        .replace('{{UNSUBSCRIBE_URL}}', '#')
+      let full = templateHtml.replace('{{BODY}}', bodyHtml)
+      if (isMarketing) {
+        full = full.replace(/\{\{UNSUBSCRIBE_URL\}\}/g, '#')
+      } else {
+        full = full.replace(/<a\b[^>]*href="[^"]*\{\{UNSUBSCRIBE_URL\}\}[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
+        full = full.replace(/\s*&nbsp;·&nbsp;\s*(?=\s*<)/g, '')
+      }
       setHtml(full)
     }
     render()
-  }, [body, templateHtml, sample])
+  }, [body, templateHtml, sample, isMarketing])
 
   return (
     <div className="space-y-2">

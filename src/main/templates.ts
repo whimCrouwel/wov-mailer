@@ -59,7 +59,14 @@ export async function getTemplate(name: string): Promise<string> {
 
 export async function renderTemplate(templateName: string, bodyHtml: string, unsubscribeUrl: string): Promise<string> {
   const template = await getTemplate(templateName)
-  return template
-    .replace('{{BODY}}', bodyHtml)
-    .replace('{{UNSUBSCRIBE_URL}}', unsubscribeUrl)
+  let html = template.replace('{{BODY}}', bodyHtml)
+  if (unsubscribeUrl) {
+    html = html.replace(/\{\{UNSUBSCRIBE_URL\}\}/g, unsubscribeUrl)
+  } else {
+    // Remove the unsubscribe anchor element entirely
+    html = html.replace(/<a\b[^>]*href="[^"]*\{\{UNSUBSCRIBE_URL\}\}[^"]*"[^>]*>[\s\S]*?<\/a>/gi, '')
+    // Remove any orphaned "·" separator left behind
+    html = html.replace(/\s*&nbsp;·&nbsp;\s*(?=\s*<)/g, '')
+  }
+  return html
 }
