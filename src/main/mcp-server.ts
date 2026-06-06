@@ -98,7 +98,7 @@ export async function startMcpServer(win: BrowserWindow, port = 3741): Promise<v
     {
       field: z.string(),
       fieldType: z.string(),
-      operator: z.enum(['equals', 'contains', 'gt', 'lt']),
+      operator: z.enum(['equals', 'not_equals', 'contains', 'gt', 'lt']),
       value: z.string(),
     },
     async (filter) => {
@@ -129,7 +129,7 @@ export async function startMcpServer(win: BrowserWindow, port = 3741): Promise<v
       filters: z.array(z.object({
         field: z.string(),
         fieldType: z.string(),
-        operator: z.enum(['equals', 'contains', 'gt', 'lt']),
+        operator: z.enum(['equals', 'not_equals', 'contains', 'gt', 'lt']),
         value: z.string(),
       })).optional(),
     },

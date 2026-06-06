@@ -45,6 +45,7 @@ export function buildFormula(filters: FilterCondition[]): string {
       return `{${f.field}}=${boolExpr}`
     }
     if (f.operator === 'equals') return `{${f.field}}='${f.value}'`
+    if (f.operator === 'not_equals') return `{${f.field}}!='${f.value}'`
     if (f.operator === 'contains') return `FIND('${f.value}',{${f.field}})>0`
     if (f.operator === 'gt') return `{${f.field}}>${f.value}`
     if (f.operator === 'lt') return `{${f.field}}<${f.value}`
@@ -62,6 +63,7 @@ export function filterRecords(
     filters.every(f => {
       const val = record[f.field] ?? ''
       if (f.operator === 'equals') return val === f.value
+      if (f.operator === 'not_equals') return val !== f.value
       if (f.operator === 'contains') return val.includes(f.value)
       if (f.operator === 'gt') return Number(val) > Number(f.value)
       if (f.operator === 'lt') return Number(val) < Number(f.value)

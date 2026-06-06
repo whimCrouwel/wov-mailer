@@ -16,13 +16,18 @@ interface Props {
 function operatorsFor(type: string): { value: FilterCondition['operator']; label: string }[] {
   if (type === 'number') return [
     { value: 'equals', label: '=' },
+    { value: 'not_equals', label: '≠' },
     { value: 'gt', label: '>' },
     { value: 'lt', label: '<' },
   ]
-  if (type === 'singleSelect') return [{ value: 'equals', label: 'equals' }]
+  if (type === 'singleSelect') return [
+    { value: 'equals', label: 'equals' },
+    { value: 'not_equals', label: 'not equals' },
+  ]
   if (CHECKBOX_TYPES.has(type.toLowerCase())) return [{ value: 'equals', label: 'is' }]
   return [
     { value: 'equals', label: 'equals' },
+    { value: 'not_equals', label: 'not equals' },
     { value: 'contains', label: 'contains' },
   ]
 }

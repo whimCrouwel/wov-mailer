@@ -8,7 +8,7 @@ export interface Config {
 export interface FilterCondition {
   field: string
   fieldType: 'singleLineText' | 'multilineText' | 'singleSelect' | 'email' | 'number' | string
-  operator: 'equals' | 'contains' | 'gt' | 'lt'
+  operator: 'equals' | 'not_equals' | 'contains' | 'gt' | 'lt'
   value: string
 }
 
