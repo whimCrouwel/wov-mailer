@@ -56,6 +56,8 @@ export async function sendBroadcast(
       }
       console.log(`[resend] sent to ${recipient.email}, id=${data?.id}`)
       sent++
+      // Stay under Resend's 2 req/sec rate limit
+      await new Promise((resolve) => setTimeout(resolve, 600))
     } catch (err) {
       failed++
       errors.push(`${recipient.email}: ${String(err)}`)
