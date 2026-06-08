@@ -128,7 +128,9 @@ export function registerIpcHandlers(): void {
     }
 
     const ptyProcess = activePty
-    ptyProcess.onData(data => event.sender.send('terminal:data', data))
+    ptyProcess.onData(data => {
+      if (!event.sender.isDestroyed()) event.sender.send('terminal:data', data)
+    })
 
     activeOnInput = (_e, input) => ptyProcess.write(input)
     activeOnResize = (_e, cols, rows) => {
