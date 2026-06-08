@@ -138,6 +138,11 @@ export function registerIpcHandlers(): void {
       try { ptyProcess.resize(cols, rows) } catch {}
     }
 
+    ptyProcess.onExit(() => {
+      activePty = null
+      if (!event.sender.isDestroyed()) event.sender.send('terminal:exit')
+    })
+
     ipcMain.on('terminal:input', activeOnInput)
     ipcMain.on('terminal:resize', activeOnResize)
 

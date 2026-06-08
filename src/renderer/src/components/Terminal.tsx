@@ -17,8 +17,17 @@ export function Terminal() {
     fitAddon.fit()
     termRef.current = term
 
-    window.api.terminal.create()
+    const startSession = () => {
+      term.clear()
+      window.api.terminal.create()
+    }
+
+    startSession()
     window.api.terminal.onData(data => term.write(data))
+    window.api.terminal.onExit(() => {
+      term.write('\r\n\r\n[session ended — press any key to restart]\r\n')
+      term.onKey(() => startSession())
+    })
     term.onData(input => window.api.terminal.sendInput(input))
 
     const observer = new ResizeObserver(() => {

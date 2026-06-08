@@ -25,6 +25,7 @@ declare global {
         create(): void
         destroy(): void
         onData(cb: (data: string) => void): void
+        onExit(cb: () => void): void
         sendInput(input: string): void
         resize(cols: number, rows: number): void
       }
