@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 import { randomUUID } from 'crypto'
+import { execFileSync } from 'child_process'
 import pty from 'node-pty'
 import os from 'os'
 import { IPC } from '../shared/ipc-channels'
@@ -111,14 +112,26 @@ export function registerIpcHandlers(): void {
 
     const isWin = os.platform() === 'win32'
     const shell = isWin ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
-    const shellArgs = isWin ? [] : ['-l']
+
+    // Resolve the user's full PATH from their login shell without spawning
+    // an interactive login shell (which fails in packaged Electron on macOS).
+    let resolvedEnv = process.env as Record<string, string>
+    if (!isWin) {
+      try {
+        const userPath = execFileSync(shell, ['-l', '-c', 'echo $PATH'], {
+          encoding: 'utf8', timeout: 3000
+        }).trim()
+        if (userPath) resolvedEnv = { ...resolvedEnv, PATH: userPath }
+      } catch {}
+    }
+
     try {
-      activePty = pty.spawn(shell, shellArgs, {
+      activePty = pty.spawn(shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 24,
         cwd: os.homedir(),
-        env: process.env as Record<string, string>,
+        env: resolvedEnv,
       })
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err)
