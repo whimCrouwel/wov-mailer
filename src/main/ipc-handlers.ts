@@ -109,9 +109,11 @@ export function registerIpcHandlers(): void {
   ipcMain.on('terminal:create', (event) => {
     teardownTerminal()
 
-    const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
+    const isWin = os.platform() === 'win32'
+    const shell = isWin ? 'powershell.exe' : process.env.SHELL ?? '/bin/zsh'
+    const shellArgs = isWin ? [] : ['-l']
     try {
-      activePty = pty.spawn(shell, [], {
+      activePty = pty.spawn(shell, shellArgs, {
         name: 'xterm-color',
         cols: 80,
         rows: 24,
@@ -129,7 +131,10 @@ export function registerIpcHandlers(): void {
     ptyProcess.onData(data => event.sender.send('terminal:data', data))
 
     activeOnInput = (_e, input) => ptyProcess.write(input)
-    activeOnResize = (_e, cols, rows) => ptyProcess.resize(cols, rows)
+    activeOnResize = (_e, cols, rows) => {
+      if (!activePty) return
+      try { ptyProcess.resize(cols, rows) } catch {}
+    }
 
     ipcMain.on('terminal:input', activeOnInput)
     ipcMain.on('terminal:resize', activeOnResize)
